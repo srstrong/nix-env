@@ -31,6 +31,7 @@
         epkgs.melpaPackages.projectile
         epkgs.melpaPackages.rainbow-delimiters
 
+        epkgs.melpaPackages.ace-jump-mode
         epkgs.melpaPackages.dhall-mode
         epkgs.melpaPackages.elm-mode
         epkgs.melpaPackages.markdown-mode
