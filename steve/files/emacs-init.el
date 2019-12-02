@@ -36,14 +36,14 @@
 ;; -----------------------------------------------------------------------------
 ;; Font
 ;; -----------------------------------------------------------------------------
-(when window-system
-  (when (functionp 'set-fontset-font)
-    (set-fontset-font "fontset-default"
-                      'unicode
-                      (font-spec :family "DejaVu Sans Mono"
-                                 :width 'normal
-                                 :size 12.4
-                                 :weight 'normal))))
+;; (when window-system
+;;   (when (functionp 'set-fontset-font)
+;;     (set-fontset-font "fontset-default"
+;;                       'unicode
+;;                       (font-spec :family "DejaVu Sans Mono"
+;;                                  :width 'normal
+;;                                  :size 12.4
+;;                                  :weight 'normal))))
 
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
@@ -108,6 +108,13 @@
   (srstrong/untabify-buffer)
   (delete-trailing-whitespace))
 
+(defun srstrong/cleanup-region (beg end)
+  "Remove tmux artifacts from region."
+  (interactive "r")
+  (dolist (re '("\\\\│\·*\n" "\W*│\·*"))
+    (replace-regexp re "" nil beg end)))
+
+(global-set-key (kbd "C-x M-t") 'srstrong/cleanup-region)
 (global-set-key (kbd "C-c n") 'srstrong/cleanup-buffer)
 
 ;; -----------------------------------------------------------------------------
@@ -119,12 +126,13 @@
 ;; -----------------------------------------------------------------------------
 ;; Configure spaceline
 ;; -----------------------------------------------------------------------------
-(require 'spaceline-config)
-(spaceline-emacs-theme)
-(spaceline-helm-mode)
-(setq powerline-default-separator 'rounded)
-(setq powerline-height 17)
-(spaceline-compile)
+;; TODO - commented out since it's really slow...
+;; (require 'spaceline-config)
+;; (spaceline-emacs-theme)
+;; (spaceline-helm-mode)
+;; (setq powerline-default-separator 'rounded)
+;; (setq powerline-height 17)
+;; (spaceline-compile)
 
 ;; -----------------------------------------------------------------------------
 ;; Backup files
@@ -141,7 +149,7 @@
 ;; -----------------------------------------------------------------------------
 (global-set-key (kbd "RET") 'newline-and-indent)
 (global-set-key (kbd "C-;") 'comment-or-uncomment-region)
-(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "M-/") 'company-complete) ;;hippie-expand)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-c C-k") 'compile)
@@ -254,36 +262,6 @@
 ;; -----------------------------------------------------------------------------
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-
-;; -----------------------------------------------------------------------------
-;; Indentation and buffer cleanup
-;; TODO - duplicate of above...
-;; -----------------------------------------------------------------------------
-(defun untabify-buffer ()
-  (interactive)
-  (untabify (point-min) (point-max)))
-
-(defun indent-buffer ()
-  (interactive)
-  (indent-region (point-min) (point-max)))
-
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer."
-  (interactive)
-  (indent-buffer)
-  (untabify-buffer)
-  (delete-trailing-whitespace))
-
-(defun cleanup-region (beg end)
-  "Remove tmux artifacts from region."
-  (interactive "r")
-  (dolist (re '("\\\\│\·*\n" "\W*│\·*"))
-    (replace-regexp re "" nil beg end)))
-
-(global-set-key (kbd "C-x M-t") 'cleanup-region)
-(global-set-key (kbd "C-c n") 'cleanup-buffer)
-
-(setq-default show-trailing-whitespace t)
 
 ;; -----------------------------------------------------------------------------
 ;; Erlang
@@ -594,8 +572,6 @@
   (setq linum-relative-format "%3s ")
   (linum-relative-global-mode)
   )
-
-
 
 ;; -----------------------------------------------------------------------------
 ;; Emacs-maintained Stuff
