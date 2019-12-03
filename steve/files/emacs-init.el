@@ -297,7 +297,7 @@
 (add-to-list 'auto-mode-alist '(".*\\.xrl\\'"     . erlang-mode))
 (add-to-list 'auto-mode-alist '(".*\\.yrl\\'"     . erlang-mode))
 
-(setq ivy-erlang-complete-erlang-root (concat (file-name-directory (directory-file-name (file-name-directory (locate-file "erl" exec-path)))) "lib/erlang"))
+(if (locate-file "erl" exec-path) (setq ivy-erlang-complete-erlang-root (concat (file-name-directory (directory-file-name (file-name-directory (locate-file "erl" exec-path)))) "lib/erlang")) nil)
 
 (setq ivy-erlang-complete-ignore-dirs '(".git"))
 
