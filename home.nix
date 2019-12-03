@@ -14,19 +14,19 @@
     # Development
     gitAndTools.tig
     dhall
-    a1g
-    rg
+    ag
+    ripgrep 
   ];
 
   # Configuration
   imports = [
-    ../../common/steve/hm-fish.nix
-    ../../common/steve/hm-tmux.nix
-    ../../common/steve/hm-git.nix
-    ../../common/steve/hm-emacs.nix
-    ../../common/steve/hm-zsh.nix
-    ../../common/steve/hm-direnv.nix
-    ../../common/steve/hm-lorri.nix
+    ../../dev/nix-env/steve/hm-fish.nix
+    ../../dev/nix-env/steve/hm-tmux.nix
+    ../../dev/nix-env/steve/hm-git.nix
+    ../../dev/nix-env/steve/hm-emacs.nix
+    ../../dev/nix-env/steve/hm-zsh.nix
+    ../../dev/nix-env/steve/hm-direnv.nix
+    ../../dev/nix-env/steve/hm-lorri.nix
   ];
 
   # Let Home Manager install and manage itself.
