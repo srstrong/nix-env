@@ -435,6 +435,8 @@
     (psc-ide-mode)
     (company-mode)
     (flycheck-mode)
+    (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
+    (local-set-key (kbd "C-c C-p") 'flycheck-previous-error)
     (turn-on-purescript-indentation)))
 
 ;; -----------------------------------------------------------------------------

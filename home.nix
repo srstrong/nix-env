@@ -20,13 +20,13 @@
 
   # Configuration
   imports = [
-    ../../dev/nix-env/steve/hm-fish.nix
-    ../../dev/nix-env/steve/hm-tmux.nix
-    ../../dev/nix-env/steve/hm-git.nix
-    ../../dev/nix-env/steve/hm-emacs.nix
-    ../../dev/nix-env/steve/hm-zsh.nix
-    ../../dev/nix-env/steve/hm-direnv.nix
-    ../../dev/nix-env/steve/hm-lorri.nix
+    ./steve/hm-fish.nix
+    ./steve/hm-tmux.nix
+    ./steve/hm-git.nix
+    ./steve/hm-emacs.nix
+    ./steve/hm-zsh.nix
+    ./steve/hm-direnv.nix
+    ./steve/hm-lorri.nix
   ];
 
   # Let Home Manager install and manage itself.
