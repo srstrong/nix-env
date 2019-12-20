@@ -34,6 +34,7 @@
         epkgs.melpaPackages.ace-jump-mode
         epkgs.melpaPackages.dhall-mode
         epkgs.melpaPackages.elm-mode
+        epkgs.melpaPackages.js2-mode
         epkgs.melpaPackages.markdown-mode
         epkgs.melpaPackages.purescript-mode
         epkgs.melpaPackages.rust-mode

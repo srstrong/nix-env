@@ -9,13 +9,14 @@
 
     # Useful for system administration
     htop
+    iftop
     wget
 
     # Development
     gitAndTools.tig
     dhall
     ag
-    ripgrep 
+    ripgrep
   ];
 
   # Configuration
