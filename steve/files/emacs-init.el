@@ -448,7 +448,9 @@
 ;; Purescript
 ;; -----------------------------------------------------------------------------
 (use-package purescript-mode)
-(use-package psc-ide)
+(use-package psc-ide
+  :load-path "/Users/adrianroe/env/emacs/psc-ide-emacs")
+;;(use-package psc-ide)
 
 ;;(add-to-list 'load-path "~/dev/purescript/purty/")
 ;;(require 'purty)
@@ -589,12 +591,18 @@
 
 (use-package ag)
 
-(use-package
-  linum-relative
-  :config
-  (setq linum-relative-format "%3s ")
-  (linum-relative-global-mode)
-  )
+;; (use-package
+;;   linum-relative
+;;   :config
+;;   (setq linum-relative-format "%3s ")
+;;   (linum-relative-global-mode)
+;;   )
+
+
+(global-display-line-numbers-mode)
+(custom-set-faces
+ '(line-number ((t (:inherit (powerline-inactive2 shadow default))))))
+
 
 ;; -----------------------------------------------------------------------------
 ;; Emacs-maintained Stuff
