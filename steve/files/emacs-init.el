@@ -51,14 +51,17 @@
 ;;                                  :size 12.4
 ;;                                  :weight 'normal))))
 
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-
 ;; -----------------------------------------------------------------------------
 ;; ace-jump
 ;; -----------------------------------------------------------------------------
 (require 'ace-jump-mode)
-(global-set-key (kbd "C-x j") 'ace-jump-mode)
+(global-set-key (kbd "M-SPC") 'ace-jump-mode)
+
+;; -----------------------------------------------------------------------------
+;; ace-window
+;; -----------------------------------------------------------------------------
+(require 'ace-window)
+(global-set-key (kbd "M-p") 'ace-window)
 
 ;; -----------------------------------------------------------------------------
 ;; Buffer management
@@ -209,26 +212,6 @@
   (local-set-key (kbd "C-c C-p") 'flymake-goto-prev-error))
 
 (add-hook 'flymake-mode-hook 'srstrong/flymake-keys)
-
-;; -----------------------------------------------------------------------------
-;; ace-jump
-;; -----------------------------------------------------------------------------
-(require 'ace-jump-mode)
-(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-
-;; -----------------------------------------------------------------------------
-;; Purescript
-;; -----------------------------------------------------------------------------
-;;(add-to-list 'load-path "~/dev/purescript/purty/")
-;;(require 'purty)
-(add-hook 'purescript-mode-hook
-  (lambda ()
-    (psc-ide-mode)
-    (company-mode)
-    (flycheck-mode)
-    (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
-    (local-set-key (kbd "C-c C-p") 'flycheck-previous-error)
-    (turn-on-purescript-indentation)))
 
 ;; -----------------------------------------------------------------------------
 ;; Misc
@@ -448,9 +431,9 @@
 ;; Purescript
 ;; -----------------------------------------------------------------------------
 (use-package purescript-mode)
-(use-package psc-ide
-  :load-path "/Users/adrianroe/env/emacs/psc-ide-emacs")
-;;(use-package psc-ide)
+;; (use-package psc-ide
+;;    :load-path "/Users/adrianroe/env/emacs/psc-ide-emacs")
+(use-package psc-ide)
 
 ;;(add-to-list 'load-path "~/dev/purescript/purty/")
 ;;(require 'purty)

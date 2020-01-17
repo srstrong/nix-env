@@ -24,6 +24,7 @@
         epkgs.melpaPackages.linum-relative
         epkgs.melpaPackages.helm-ag
         epkgs.melpaPackages.magit
+        epkgs.melpaPackages.nix-mode
         epkgs.melpaPackages.neotree
         epkgs.melpaPackages.smex
         epkgs.melpaPackages.spaceline
@@ -32,6 +33,7 @@
         epkgs.melpaPackages.rainbow-delimiters
 
         epkgs.melpaPackages.ace-jump-mode
+        epkgs.melpaPackages.ace-window
         epkgs.melpaPackages.dhall-mode
         epkgs.melpaPackages.elm-mode
         epkgs.melpaPackages.js2-mode
