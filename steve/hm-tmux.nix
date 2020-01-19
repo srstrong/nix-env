@@ -14,6 +14,7 @@ in
     extraConfig = ''
       set -sg escape-time 0
       set -g history-limit 16384
+      set -g mouse on
 
       # Enable true-color for terminal type under which tmux runs
       set -ga terminal-overrides ",xterm-256color:Tc"
