@@ -13,9 +13,15 @@
 
     # Development
     gitAndTools.tig
+    git-lfs
     dhall
     ag
-    ripgrep 
+    ripgrep
+    fzf
+    jq
+    python27Packages.jsmin
+
+    # inetutils
   ];
 
   # Configuration
