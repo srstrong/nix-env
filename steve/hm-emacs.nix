@@ -23,6 +23,7 @@
         epkgs.melpaPackages.flymake-cursor
         epkgs.melpaPackages.linum-relative
         epkgs.melpaPackages.helm-ag
+        epkgs.melpaPackages.highlight-indent-guides
         epkgs.melpaPackages.magit
         epkgs.melpaPackages.nix-mode
         epkgs.melpaPackages.neotree
