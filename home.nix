@@ -9,6 +9,7 @@
 
     # Useful for system administration
     htop
+    iftop
     wget
 
     # Development

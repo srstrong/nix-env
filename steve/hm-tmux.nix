@@ -12,9 +12,37 @@ in
   programs.tmux = {
     enable = true;
     extraConfig = ''
-      set -sg escape-time 0
       set -g history-limit 16384
       set -g mouse on
+
+      bind-key -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+
+      bind-key -n DoubleClick1Pane \
+                  select-pane \; \
+                  copy-mode -M \; \
+                  send-keys -X select-word \; \
+                  run-shell "sleep .5s" \; \
+                  send-keys -X copy-pipe-and-cancel "pbcopy"
+
+      bind-key -T copy-mode DoubleClick1Pane \
+                  select-pane \; \
+                  send-keys -X select-word \; \
+                  run-shell "sleep .5s" \; \
+                  send-keys -X copy-pipe "pbcopy"
+
+      # bind-key -n TripleClick1Pane \
+      #             select-pane \; \
+      #             copy-mode -M \; \
+      #             send-keys -X select-line \; \
+      #             run-shell "sleep .5s" \; \
+      #             send-keys -X copy-pipe-and-cancel "pbcopy"
+
+      # bind-key -T copy-mode TripleClick1Pane \
+      #             select-pane \; \
+      #             send-keys -X select-line \; \
+      #             run-shell "sleep .5s" \; \
+      #             send-keys -X copy-pipe "pbcopy"
+
 
       # Enable true-color for terminal type under which tmux runs
       set -ga terminal-overrides ",xterm-256color:Tc"
@@ -35,4 +63,3 @@ in
     secureSocket = false;
   };
 }
-

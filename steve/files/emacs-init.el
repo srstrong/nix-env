@@ -22,11 +22,17 @@
 (menu-bar-mode -1)
 
 ;; -----------------------------------------------------------------------------
-;; Marking text
+;; Marking text and clipboard
 ;; -----------------------------------------------------------------------------
 (delete-selection-mode t)
 (transient-mark-mode t)
 (setq x-select-enable-clipboard t)
+
+(defun pbcopy ()
+  (interactive)
+  (let ((deactivate-mark t))
+    (call-process-region (point) (mark) "pbcopy")))
+(global-set-key (kbd "M-W") 'pbcopy)
 
 ;; -----------------------------------------------------------------------------
 ;; Trailing newline
@@ -45,14 +51,17 @@
 ;;                                  :size 12.4
 ;;                                  :weight 'normal))))
 
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
+;; -----------------------------------------------------------------------------
+;; ace-window
+;; -----------------------------------------------------------------------------
+(require 'ace-window)
+(global-set-key (kbd "M-p") 'ace-window)
 
 ;; -----------------------------------------------------------------------------
 ;; ace-jump
 ;; -----------------------------------------------------------------------------
 (require 'ace-jump-mode)
-(global-set-key (kbd "C-x j") 'ace-jump-mode)
+(global-set-key (kbd "M-SPC") 'ace-jump-mode)
 
 ;; -----------------------------------------------------------------------------
 ;; Buffer management
@@ -82,6 +91,7 @@
 (require 'whitespace)
 
 (unless (member 'whitespace-mode prog-mode-hook)
+  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook 'whitespace-mode))
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (setq-default indicate-empty-lines t)
@@ -154,8 +164,8 @@
 ;; Key bindings
 ;; -----------------------------------------------------------------------------
 (global-set-key (kbd "RET") 'newline-and-indent)
-(global-set-key (kbd "C-x ;") 'comment-or-uncomment-region)
-(global-set-key (kbd "M-/") 'company-complete) ;;hippie-expand)
+;;(global-set-key (kbd "C-x ;") 'comment-or-uncomment-region)
+;;(global-set-key (kbd "M-/") 'company-complete) ;;hippie-expand)
 ;;(global-set-key (kbd "C-+") 'text-scale-increase)
 ;;(global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-c C-k") 'compile)
@@ -528,9 +538,8 @@
 
 (add-hook 'neotree-mode-hook
 	  (lambda ()
-
-	    ;; Line numbers are pointless in neotree
-	    (linum-mode 0)))
+      ;; Line numbers are pointless in neotree
+      (linum-mode 0)))
 
 ;; -----------------------------------------------------------------------------
 ;; Projectile
@@ -566,12 +575,16 @@
 
 (use-package ag)
 
-(use-package
-  linum-relative
-  :config
-  (setq linum-relative-format "%3s ")
-  (linum-relative-global-mode)
-  )
+;; (use-package
+;;   linum-relative
+;;   :config
+;;   (setq linum-relative-format "%3s ")
+;;   (linum-relative-global-mode)
+;;   )
+
+(global-display-line-numbers-mode)
+(custom-set-faces
+ '(line-number ((t (:inherit (powerline-inactive2 shadow default))))))
 
 ;; -----------------------------------------------------------------------------
 ;; Emacs-maintained Stuff
