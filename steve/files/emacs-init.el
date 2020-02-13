@@ -52,16 +52,16 @@
 ;;                                  :weight 'normal))))
 
 ;; -----------------------------------------------------------------------------
-;; ace-window
-;; -----------------------------------------------------------------------------
-(require 'ace-window)
-(global-set-key (kbd "M-p") 'ace-window)
-
-;; -----------------------------------------------------------------------------
 ;; ace-jump
 ;; -----------------------------------------------------------------------------
 (require 'ace-jump-mode)
 (global-set-key (kbd "M-SPC") 'ace-jump-mode)
+
+;; -----------------------------------------------------------------------------
+;; ace-window
+;; -----------------------------------------------------------------------------
+(require 'ace-window)
+(global-set-key (kbd "M-p") 'ace-window)
 
 ;; -----------------------------------------------------------------------------
 ;; Buffer management
@@ -130,6 +130,14 @@
   (dolist (re '("\\\\│\·*\n" "\W*│\·*"))
     (replace-regexp re "" nil beg end)))
 
+(defun srstrong/save-buffer()
+    "Cleanup on save"
+    (interactive)
+    (delete-trailing-whitespace)
+    (save-buffer))
+(global-set-key (kbd "C-x C-s") 'srstrong/save-buffer)
+
+
 (global-set-key (kbd "C-x M-t") 'srstrong/cleanup-region)
 (global-set-key (kbd "C-c n") 'srstrong/cleanup-buffer)
 
@@ -164,10 +172,6 @@
 ;; Key bindings
 ;; -----------------------------------------------------------------------------
 (global-set-key (kbd "RET") 'newline-and-indent)
-;;(global-set-key (kbd "C-x ;") 'comment-or-uncomment-region)
-;;(global-set-key (kbd "M-/") 'company-complete) ;;hippie-expand)
-;;(global-set-key (kbd "C-+") 'text-scale-increase)
-;;(global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "C-c C-k") 'compile)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x t") 'neotree-toggle)
@@ -184,8 +188,21 @@
    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
           1 font-lock-warning-face t))))
 
+(add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+(setq highlight-indent-guides-method 'character)
 ;;(add-hook 'prog-mode-hook 'srstrong/turn-on-hl-line-mode)
 (add-hook 'prog-mode-hook 'srstrong/add-watchwords)
+
+(defun aj-toggle-fold ()
+  "Toggle fold all lines larger than indentation on current line"
+  (interactive)
+  (let ((col 1))
+    (save-excursion
+      (back-to-indentation)
+      (setq col (+ 1 (current-column)))
+      (set-selective-display
+       (if selective-display nil (or col 1))))))
+(global-set-key [(M C i)] 'aj-toggle-fold)
 
 ;; -----------------------------------------------------------------------------
 ;; Complete Anything
