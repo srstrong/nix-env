@@ -280,103 +280,6 @@
 ;; -----------------------------------------------------------------------------
 ;; Erlang
 ;; -----------------------------------------------------------------------------
-(setq erlang-electric-commands nil)
-(require 'erlang-start)
-
-(add-hook 'erlang-mode-hook 'srstrong/add-watchwords)
-;;(add-hook 'erlang-mode-hook 'srstrong/turn-on-hl-line-mode)
-(add-hook 'erlang-mode-hook 'whitespace-mode)
-(add-hook 'erlang-mode-hook 'company-mode)
-(add-hook 'erlang-mode-hook (lambda() (setq indent-tabs-mode nil)))
-(add-hook 'erlang-mode-hook (lambda () (setq erlang-indent-level tab-width)))
-(add-hook 'erlang-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
-(add-hook 'erlang-mode-hook #'company-erlang-init)
-(add-hook 'erlang-mode-hook #'ivy-erlang-complete-init)
-(add-hook 'after-save-hook #'ivy-erlang-complete-reparse)
-
-(add-to-list 'auto-mode-alist '("\\.erlang$" . erlang-mode)) ;; User customizations file
-(add-to-list 'auto-mode-alist '(".*\\.app\\'"     . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*app\\.src\\'"  . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.config\\'"  . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.rel\\'"     . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.script\\'"  . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.escript\\'" . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.es\\'"      . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.xrl\\'"     . erlang-mode))
-(add-to-list 'auto-mode-alist '(".*\\.yrl\\'"     . erlang-mode))
-
-(if (locate-file "erl" exec-path) (setq ivy-erlang-complete-erlang-root (concat (file-name-directory (directory-file-name (file-name-directory (locate-file "erl" exec-path)))) "lib/erlang")) nil)
-
-(setq ivy-erlang-complete-ignore-dirs '(".git"))
-
-(require 'erlang-flymake)
-;;(setq erlang-flymake-command (expand-file-name "erlc" (srstrong/erlang/latest/bin)))
-(setq erlang-flymake-command "erlc")
-
-(defun rebar3/erlang-flymake-get-include-dirs ()
-  (append
-   (erlang-flymake-get-include-dirs)
-   (file-expand-wildcards (concat (erlang-flymake-get-app-dir) "_build/*/lib")))
-  )
-
-(setq erlang-flymake-get-include-dirs-function 'rebar3/erlang-flymake-get-include-dirs)
-
-(defun rebar3/erlang-flymake-get-code-path-dirs ()
-  (append
-   (erlang-flymake-get-code-path-dirs)
-   (file-expand-wildcards (concat (erlang-flymake-get-app-dir) "_build/*/lib/*/ebin"))))
-
-(setq erlang-flymake-get-code-path-dirs-function 'rebar3/erlang-flymake-get-code-path-dirs)
-
-(require 'flymake)
-;;(require 'flymake-cursor) ; http://www.emacswiki.org/emacs/FlymakeCursor
-(setq flymake-log-level 3)
-
-;; this used to use local-file instead of temp-file, but that caused issues with relative
-;; directories and symlinked _checkouts
-(defun flymake-compile-script-path (path)
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                     'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-    (list path (list temp-file))))
-
-;; TODO - only using this since flymake doesn't appear to understand _build
-;;      - either need to teach flymake or get syntaxerl into nix
-(defun flymake-syntaxerl ()
-  (flymake-compile-script-path "~/dev/syntaxerl/syntaxerl"))
-
-(add-hook 'erlang-mode-hook
-  '(lambda()
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.erl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.hrl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.xrl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.yrl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.app\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.app.src\\'" flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.config\\'"  flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.rel\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.script\\'"  flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.escript\\'" flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.es\\'"      flymake-syntaxerl))
-
-     ;; should be the last.
-     (flymake-mode 1)
-))
-;;
-;;; see /usr/local/lib/erlang/lib/tools-<Ver>/emacs/erlang-flymake.erl
-;;(defun erlang-flymake-only-on-save ()
-;;  "Trigger flymake only when the buffer is saved (disables syntax
-;;check on newline and when there are no changes)."
-;;  (interactive)
-;;  ;; There doesn't seem to be a way of disabling this; set to the
-;;  ;; largest int available as a workaround (most-positive-fixnum
-;;  ;; equates to 8.5 years on my machine, so it ought to be enough ;-) )
-;;  (setq flymake-no-changes-timeout most-positive-fixnum)
-;;  (setq flymake-start-syntax-check-on-newline nil))
-;;
-;;(erlang-flymake-only-on-save)
 
 ;; -----------------------------------------------------------------------------
 ;; powerline
@@ -440,6 +343,16 @@
 (use-package rust-mode)
 (use-package cargo)
 (use-package toml-mode)
+(add-hook 'rust-mode-hook
+  (lambda ()
+    (psc-ide-mode)
+    (racer-mode)
+    (company-mode)
+    ))
+
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq company-tooltip-align-annotations t)
 
 ;; -----------------------------------------------------------------------------
 ;; Purescript
@@ -491,33 +404,27 @@
   (toggle-read-only))
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
-;; TODO - remove
 ;; -----------------------------------------------------------------------------
-;; Erlang
+;; EDTS (Erlang) - note that we use a custom version of EDTS so this is more
+;; involved than if we could just use the version on MELPA
 ;; -----------------------------------------------------------------------------
-;;(use-package
-;;  erlang
-;;  :init
-;;  (setq erlang-electric-commands t)
-;;  )
-;;;; -----------------------------------------------------------------------------
-;;;; EDTS (Erlang) - note that we use a custom version of EDTS so this is more
-;;;; involved than if we could just use the version on MELPA
-;;;; -----------------------------------------------------------------------------
-;;
-;;;; EDTS requirements
-;;(use-package auto-highlight-symbol)
-;;(use-package eproject)
-;;(use-package auto-complete)
-;;
-;;;; Stop EDTS complaining about the fact that it's being loaded directly
-;;(setq edts-inhibit-package-check t)
-;;
-;;;; Load it
-;;(use-package edts-start
-;;  :load-path "stears/edts" ;; Relative to emacs.d/
-;;  )
-;;
+
+;; EDTS requirements
+(use-package auto-highlight-symbol)
+(use-package eproject)
+(use-package auto-complete)
+
+;; Stop EDTS complaining about the fact that it's being loaded directly
+(setq edts-inhibit-package-check t)
+
+;;(setq edts-inhibit-package-check true)
+(add-to-list 'load-path "/Users/adrianroe/env/emacs/edts")
+(use-package edts-start
+  :load-path "/Users/adrianroe/env/emacs/edts")
+(add-hook 'after-init-hook 'my-after-init-hook)
+(defun my-after-init-hook ()
+  (require 'edts-start))
+
 ;;(add-hook 'erlang-mode-hook
 ;;	  (lambda ()
 ;;	    (define-key evil-normal-state-local-map (kbd "C-]") 'edts-find-source-under-point)
