@@ -16,7 +16,7 @@
         epkgs.melpaPackages.helm-ag
 
         # Function complete
-        epkgs.melpaPackages.smex # smart M-x (use old one?)
+        epkgs.melpaPackages.smex
 
         # General things
         epkgs.melpaPackages.company
@@ -24,21 +24,21 @@
         epkgs.melpaPackages.highlight-indent-guides
         epkgs.melpaPackages.magit
         epkgs.melpaPackages.neotree
-        epkgs.melpaPackages.spaceline
         epkgs.melpaPackages.projectile
         epkgs.melpaPackages.rainbow-delimiters
+        epkgs.melpaPackages.spaceline
+        epkgs.melpaPackages.textmate
 
-        # Flymake and flycheck - TODO - still needed?
+        # Flymake and flycheck - TODO - both still needed?
         epkgs.melpaPackages.flycheck
-        epkgs.melpaPackages.flymake-cursor
 
         # EDTS Requirements
-        epkgs.melpaPackages.eproject
         epkgs.melpaPackages.auto-complete
         epkgs.melpaPackages.auto-highlight-symbol
+        epkgs.melpaPackages.eproject
 
-        epkgs.melpaPackages.erlang
         epkgs.melpaPackages.company-erlang
+        epkgs.melpaPackages.erlang
 
         # ACE Jump
         epkgs.melpaPackages.ace-jump-mode
@@ -46,8 +46,9 @@
 
         # Rust
         epkgs.melpaPackages.cargo
-        epkgs.melpaPackages.rust-mode
+        epkgs.melpaPackages.flycheck-rust
         epkgs.melpaPackages.racer
+        epkgs.melpaPackages.rust-mode
         epkgs.melpaPackages.toml-mode
 
         # More language modes
@@ -64,9 +65,9 @@
         epkgs.melpaPackages.yaml-mode
 
         # Themes
-        epkgs.melpaPackages.pastelmac-theme
-        epkgs.melpaPackages.monokai-theme
         epkgs.melpaPackages.ir-black-theme
+        epkgs.melpaPackages.monokai-theme
+        epkgs.melpaPackages.pastelmac-theme
         epkgs.melpaPackages.solarized-theme
         epkgs.melpaPackages.underwater-theme
 

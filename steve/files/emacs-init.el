@@ -218,14 +218,14 @@
 (global-set-key (kbd "M-\\") 'dabbrev-expand)
 
 ;; -----------------------------------------------------------------------------
-;; Flymake
+;; Flycheck
 ;; -----------------------------------------------------------------------------
-(defun srstrong/flymake-keys ()
-  "Adds keys for navigating between errors found by Flymake."
-  (local-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
-  (local-set-key (kbd "C-c C-p") 'flymake-goto-prev-error))
+(defun srstrong/flycheck-keys ()
+  "Adds keys for navigating between errors found by Flycheck."
+  (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
+  (local-set-key (kbd "C-c C-p") 'flycheck-previous-error))
 
-(add-hook 'flymake-mode-hook 'srstrong/flymake-keys)
+(add-hook 'flycheck-mode-hook 'srstrong/flycheck-keys)
 
 ;; -----------------------------------------------------------------------------
 ;; Misc
@@ -259,12 +259,26 @@
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
+
+
+;; -----------------------------------------------------------------------------
+;; Textmate
+;; -----------------------------------------------------------------------------
+(defvar *textmate-gf-exclude*
+  "(/|^)(\\.+[^/]+|vendor|fixtures|tmp|log|classes|build|deps)($|/)|(\\.xcodeproj|\\.nib|\\.framework|\\.pbproj|\\.pbxproj|\\.xcode|\\.xcodeproj|\\.bundle|\\.pyc|\\.beam|\\.d)(/|$)"
+  "Regexp of files to exclude from `textmate-goto-file'.")
+
 ;; -----------------------------------------------------------------------------
 ;; IDO
 ;; -----------------------------------------------------------------------------
 (ido-mode t)
 (setq ido-enable-flex-matching t
       ido-use-virtual-buffers t)
+(setq ido-decorations (quote ("\n-> "     "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+;; (setq ido-auto-merge-work-directories-length -1)
+
+
+
 
 ;; -----------------------------------------------------------------------------
 ;; Column number mode
@@ -276,10 +290,6 @@
 ;; -----------------------------------------------------------------------------
 (setq backup-directory-alist `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
-
-;; -----------------------------------------------------------------------------
-;; Erlang
-;; -----------------------------------------------------------------------------
 
 ;; -----------------------------------------------------------------------------
 ;; powerline
@@ -341,13 +351,15 @@
 ;; Rust
 ;; -----------------------------------------------------------------------------
 (use-package rust-mode)
+(use-package flycheck-rust)
 (use-package cargo)
 (use-package toml-mode)
 (add-hook 'rust-mode-hook
   (lambda ()
-    (psc-ide-mode)
     (racer-mode)
     (company-mode)
+    (flycheck-rust-setup)
+    (flycheck-mode)
     ))
 
 (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -404,6 +416,7 @@
   (toggle-read-only))
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
+
 ;; -----------------------------------------------------------------------------
 ;; EDTS (Erlang) - note that we use a custom version of EDTS so this is more
 ;; involved than if we could just use the version on MELPA
@@ -421,9 +434,15 @@
 (add-to-list 'load-path "/Users/adrianroe/env/emacs/edts")
 (use-package edts-start
   :load-path "/Users/adrianroe/env/emacs/edts")
+
+(add-hook 'erlang-mode-hook
+          (lambda ()  (require 'edts-start)))
+
 (add-hook 'after-init-hook 'my-after-init-hook)
 (defun my-after-init-hook ()
-  (require 'edts-start))
+;;  (require 'edts-start)
+  (textmate-mode)
+  )
 
 ;;(add-hook 'erlang-mode-hook
 ;;	  (lambda ()
