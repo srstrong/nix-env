@@ -225,14 +225,14 @@
 (global-set-key (kbd "M-\\") 'dabbrev-expand)
 
 ;; -----------------------------------------------------------------------------
-;; Flymake
+;; Flycheck
 ;; -----------------------------------------------------------------------------
-(defun srstrong/flymake-keys ()
-  "Adds keys for navigating between errors found by Flymake."
-  (local-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
-  (local-set-key (kbd "C-c C-p") 'flymake-goto-prev-error))
+(defun srstrong/flycheck-keys ()
+  "Adds keys for navigating between errors found by Flycheck."
+  (local-set-key (kbd "C-c C-n") 'next-error)
+  (local-set-key (kbd "C-c C-p") 'previous-error))
 
-(add-hook 'flymake-mode-hook 'srstrong/flymake-keys)
+(add-hook 'flycheck-mode-hook 'srstrong/flycheck-keys)
 
 ;; -----------------------------------------------------------------------------
 ;; Misc
@@ -267,11 +267,19 @@
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;; -----------------------------------------------------------------------------
+;; Textmate
+;; -----------------------------------------------------------------------------
+(defvar *textmate-gf-exclude*
+  "(/|^)(\\.+[^/]+|vendor|fixtures|tmp|log|classes|build|deps)($|/)|(\\.xcodeproj|\\.nib|\\.framework|\\.pbproj|\\.pbxproj|\\.xcode|\\.xcodeproj|\\.bundle|\\.pyc|\\.beam|\\.d)(/|$)"
+  "Regexp of files to exclude from `textmate-goto-file'.")
+
+;; -----------------------------------------------------------------------------
 ;; IDO
 ;; -----------------------------------------------------------------------------
 (ido-mode t)
 (setq ido-enable-flex-matching t
       ido-use-virtual-buffers t)
+(setq ido-decorations (quote ("\n-> "     "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
 
 ;; -----------------------------------------------------------------------------
 ;; Column number mode
@@ -299,6 +307,7 @@
 (add-hook 'erlang-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 (add-hook 'erlang-mode-hook #'company-erlang-init)
 (add-hook 'erlang-mode-hook #'ivy-erlang-complete-init)
+(add-hook 'erlang-mode-hook #'flycheck-mode)
 (add-hook 'after-save-hook #'ivy-erlang-complete-reparse)
 
 (add-to-list 'auto-mode-alist '("\\.erlang$" . erlang-mode)) ;; User customizations file
@@ -316,62 +325,73 @@
 
 (setq ivy-erlang-complete-ignore-dirs '(".git"))
 
-(require 'erlang-flymake)
-;;(setq erlang-flymake-command (expand-file-name "erlc" (srstrong/erlang/latest/bin)))
-(setq erlang-flymake-command "erlc")
+(add-to-list 'load-path "~/.emacs.d/site-lisp/flycheck-rebar3/")
+(require 'flycheck-rebar3)
+(flycheck-rebar3-setup)
 
-(defun rebar3/erlang-flymake-get-include-dirs ()
-  (append
-   (erlang-flymake-get-include-dirs)
-   (file-expand-wildcards (concat (erlang-flymake-get-app-dir) "_build/*/lib")))
+(add-hook 'after-init-hook 'my-after-init-hook)
+(defun my-after-init-hook ()
+;;  (require 'edts-start)
+  (textmate-mode)
   )
 
-(setq erlang-flymake-get-include-dirs-function 'rebar3/erlang-flymake-get-include-dirs)
+;; (require 'erlang-flymake)
+;; ;;(setq erlang-flymake-command (expand-file-name "erlc" (srstrong/erlang/latest/bin)))
+;; (setq erlang-flymake-command "erlc")
 
-(defun rebar3/erlang-flymake-get-code-path-dirs ()
-  (append
-   (erlang-flymake-get-code-path-dirs)
-   (file-expand-wildcards (concat (erlang-flymake-get-app-dir) "_build/*/lib/*/ebin"))))
+;; (defun rebar3/erlang-flymake-get-include-dirs ()
+;;   (append
+;;    (erlang-flymake-get-include-dirs)
+;;    (file-expand-wildcards (concat (erlang-flymake-get-app-dir) "_build/*/lib")))
+;;   )
 
-(setq erlang-flymake-get-code-path-dirs-function 'rebar3/erlang-flymake-get-code-path-dirs)
+;; (setq erlang-flymake-get-include-dirs-function 'rebar3/erlang-flymake-get-include-dirs)
 
-(require 'flymake)
-;;(require 'flymake-cursor) ; http://www.emacswiki.org/emacs/FlymakeCursor
-(setq flymake-log-level 3)
+;; (defun rebar3/erlang-flymake-get-code-path-dirs ()
+;;   (append
+;;    (erlang-flymake-get-code-path-dirs)
+;;    (file-expand-wildcards (concat (erlang-flymake-get-app-dir) "_build/*/lib/*/ebin"))))
 
-;; this used to use local-file instead of temp-file, but that caused issues with relative
-;; directories and symlinked _checkouts
-(defun flymake-compile-script-path (path)
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                     'flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-    (list path (list temp-file))))
+;; (setq erlang-flymake-get-code-path-dirs-function 'rebar3/erlang-flymake-get-code-path-dirs)
 
-;; TODO - only using this since flymake doesn't appear to understand _build
-;;      - either need to teach flymake or get syntaxerl into nix
-(defun flymake-syntaxerl ()
-  (flymake-compile-script-path "~/dev/syntaxerl/syntaxerl"))
+;; (require 'flymake)
+;; ;;(require 'flymake-cursor) ; http://www.emacswiki.org/emacs/FlymakeCursor
+;; (setq flymake-log-level 3)
 
-(add-hook 'erlang-mode-hook
-  '(lambda()
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.erl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.hrl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.xrl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.yrl\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.app\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.app.src\\'" flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.config\\'"  flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.rel\\'"     flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.script\\'"  flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.escript\\'" flymake-syntaxerl))
-     (add-to-list 'flymake-allowed-file-name-masks '("\\.es\\'"      flymake-syntaxerl))
+;; ;; this used to use local-file instead of temp-file, but that caused issues with relative
+;; ;; directories and symlinked _checkouts
+;; (defun flymake-compile-script-path (path)
+;;   (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                      'flymake-create-temp-inplace))
+;;          (local-file (file-relative-name
+;;                       temp-file
+;;                       (file-name-directory buffer-file-name))))
+;;     (list path (list temp-file))))
 
-     ;; should be the last.
-     (flymake-mode 1)
-))
+;; ;; TODO - only using this since flymake doesn't appear to understand _build
+;; ;;      - either need to teach flymake or get syntaxerl into nix
+;; (defun flymake-syntaxerl ()
+;;   (flymake-compile-script-path "~/dev/syntaxerl/syntaxerl"))
+
+;; (add-hook 'erlang-mode-hook
+;;   '(lambda()
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.erl\\'"     flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.hrl\\'"     flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.xrl\\'"     flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.yrl\\'"     flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.app\\'"     flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.app.src\\'" flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.config\\'"  flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.rel\\'"     flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.script\\'"  flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.escript\\'" flymake-syntaxerl))
+;;      (add-to-list 'flymake-allowed-file-name-masks '("\\.es\\'"      flymake-syntaxerl))
+
+;;      ;; should be the last.
+;;      (flymake-mode 1)
+;; ))
 ;;
+
 ;;; see /usr/local/lib/erlang/lib/tools-<Ver>/emacs/erlang-flymake.erl
 ;;(defun erlang-flymake-only-on-save ()
 ;;  "Trigger flymake only when the buffer is saved (disables syntax
@@ -445,8 +465,20 @@
 ;; Rust
 ;; -----------------------------------------------------------------------------
 (use-package rust-mode)
+(use-package flycheck-rust)
 (use-package cargo)
 (use-package toml-mode)
+(add-hook 'rust-mode-hook
+  (lambda ()
+    (racer-mode)
+    (company-mode)
+    (flycheck-rust-setup)
+    (flycheck-mode)
+    ))
+
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq company-tooltip-align-annotations t)
 
 ;; -----------------------------------------------------------------------------
 ;; Purescript
