@@ -15,20 +15,20 @@ in
       set -g history-limit 16384
       set -g mouse on
 
-      bind-key -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+      # bind-key -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
 
-      bind-key -n DoubleClick1Pane \
-                  select-pane \; \
-                  copy-mode -M \; \
-                  send-keys -X select-word \; \
-                  run-shell "sleep .5s" \; \
-                  send-keys -X copy-pipe-and-cancel "pbcopy"
+      # bind-key -n DoubleClick1Pane \
+      #             select-pane \; \
+      #             copy-mode -M \; \
+      #             send-keys -X select-word \; \
+      #             run-shell "sleep .5s" \; \
+      #             send-keys -X copy-pipe-and-cancel "pbcopy"
 
-      bind-key -T copy-mode DoubleClick1Pane \
-                  select-pane \; \
-                  send-keys -X select-word \; \
-                  run-shell "sleep .5s" \; \
-                  send-keys -X copy-pipe "pbcopy"
+      # bind-key -T copy-mode DoubleClick1Pane \
+      #             select-pane \; \
+      #             send-keys -X select-word \; \
+      #             run-shell "sleep .5s" \; \
+      #             send-keys -X copy-pipe "pbcopy"
 
       # bind-key -n TripleClick1Pane \
       #             select-pane \; \
