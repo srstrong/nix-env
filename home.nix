@@ -1,9 +1,11 @@
 { config, pkgs, ... }:
 
+let
+  inherit (pkgs.stdenv.lib) optionals;
+in
 {
   # Packages
   home.packages = with pkgs; [
-
     # GNU > BSD :)
     coreutils
 
@@ -29,7 +31,7 @@
 
 
     # inetutils
-  ];
+  ]  ++ optionals stdenv.isLinux [ glibcLocales ];
 
   # Configuration
   imports = [
