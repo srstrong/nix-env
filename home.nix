@@ -27,11 +27,9 @@ in
     zlib.dev
     stack
     ghc
-    darwin.apple_sdk.frameworks.Security
-
 
     # inetutils
-  ]  ++ optionals stdenv.isLinux [ glibcLocales ];
+  ] ++ optionals stdenv.isLinux [ glibcLocales ] ++ optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.Security ];
 
   # Configuration
   imports = [
