@@ -21,6 +21,12 @@
     fzf
     jq
     python27Packages.jsmin
+    websocat
+    zlib.dev
+    stack
+    ghc
+    darwin.apple_sdk.frameworks.Security
+
 
     # inetutils
   ];

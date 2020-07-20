@@ -62,6 +62,7 @@
         epkgs.melpaPackages.typescript-mode
         epkgs.melpaPackages.web-mode
         epkgs.melpaPackages.yaml-mode
+        #epkgs.melpaPackages.fira-code-mode
 
         # Themes
         epkgs.melpaPackages.pastelmac-theme

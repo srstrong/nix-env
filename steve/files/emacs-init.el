@@ -91,7 +91,7 @@
 (require 'whitespace)
 
 (unless (member 'whitespace-mode prog-mode-hook)
-  (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;;  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook 'whitespace-mode))
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (setq-default indicate-empty-lines t)
@@ -229,8 +229,8 @@
 ;; -----------------------------------------------------------------------------
 (defun srstrong/flycheck-keys ()
   "Adds keys for navigating between errors found by Flycheck."
-  (local-set-key (kbd "C-c C-n") 'next-error)
-  (local-set-key (kbd "C-c C-p") 'previous-error))
+  (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
+  (local-set-key (kbd "C-c C-p") 'flycheck-previous-error))
 
 (add-hook 'flycheck-mode-hook 'srstrong/flycheck-keys)
 
@@ -304,7 +304,7 @@
 (add-hook 'erlang-mode-hook 'company-mode)
 (add-hook 'erlang-mode-hook (lambda() (setq indent-tabs-mode nil)))
 (add-hook 'erlang-mode-hook (lambda () (setq erlang-indent-level tab-width)))
-(add-hook 'erlang-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+;;(add-hook 'erlang-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 (add-hook 'erlang-mode-hook #'company-erlang-init)
 (add-hook 'erlang-mode-hook #'ivy-erlang-complete-init)
 (add-hook 'erlang-mode-hook #'flycheck-mode)
@@ -334,6 +334,18 @@
 ;;  (require 'edts-start)
   (textmate-mode)
   )
+
+(defun erlang-flymake-only-on-save ()
+ "Trigger flymake only when the buffer is saved (disables syntax
+check on newline and when there are no changes)."
+ (interactive)
+ ;; There doesn't seem to be a way of disabling this; set to the
+ ;; largest int available as a workaround (most-positive-fixnum
+ ;; equates to 8.5 years on my machine, so it ought to be enough ;-) )
+ (setq flymake-no-changes-timeout most-positive-fixnum)
+ (setq flymake-start-syntax-check-on-newline nil))
+
+(erlang-flymake-only-on-save)
 
 ;; (require 'erlang-flymake)
 ;; ;;(setq erlang-flymake-command (expand-file-name "erlc" (srstrong/erlang/latest/bin)))
