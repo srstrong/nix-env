@@ -48,6 +48,8 @@
       alias emacs="emacs -nw"
       alias dhall-format="dhall format"
 
+      export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"
+
       # Use GPG for SSH
 #      export GPG_TTY="$(tty)"
 #      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
@@ -65,4 +67,3 @@
     # NOTE: syntaxHighlighting isn't provided by home-manager
   };
 }
-
