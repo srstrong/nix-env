@@ -27,11 +27,20 @@
         epkgs.melpaPackages.projectile
         epkgs.melpaPackages.rainbow-delimiters
         epkgs.melpaPackages.spaceline
-        epkgs.melpaPackages.textmate
+        #epkgs.melpaPackages.textmate
+        epkgs.melpaPackages.which-key
 
         # Flymake and flycheck
         epkgs.melpaPackages.flycheck
         epkgs.melpaPackages.flymake-cursor
+
+        # LSP
+        epkgs.melpaPackages.lsp-mode
+        epkgs.melpaPackages.company-lsp
+        epkgs.melpaPackages.lsp-ui
+        epkgs.melpaPackages.helm-lsp
+        epkgs.melpaPackages.lsp-ivy
+        epkgs.melpaPackages.lsp-treemacs
 
         # Erlang
         epkgs.melpaPackages.auto-highlight-symbol
