@@ -437,36 +437,72 @@
 ;; LSP
 ;; -----------------------------------------------------------------------------
 (setq lsp-keymap-prefix "C-c l")
-(setq lsp-ui-sideline-enable t)
-(setq lsp-ui-doc-enable t)
-(setq lsp-ui-doc-position 'bottom)
-
-
 
 (use-package lsp-mode
-  :config
-;;  (setq lsp-purescript-server-args '("--config {'purescript': {'codegenTargets': ['corefn'], 'addSpagoSources': true}}" "--stdio"))
-  (add-hook 'erlang-mode-hook #'lsp)
-  (add-hook 'purescript-mode-hook #'lsp)
+    :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+           (erlang-mode . lsp)
+           (purescript-mode . lsp)
+           ;; if you want which-key integration
+           (lsp-mode . lsp-enable-which-key-integration))
 
-  (defun lsp-set-cfg ()
-    (let ((lsp-cfg `(:purescript (:codegenTargets ("corefn"))
-                     :addSpagoSources t)))
-      ;; TODO: check lsp--cur-workspace here to decide per server / project?
-      (lsp--set-configuration lsp-cfg)))
+    :commands lsp)
+(defun lsp-set-cfg ()
+  (let ((lsp-cfg `(:purescript (:codegenTargets ("corefn"))
+                   :addSpagoSources t)))
+    ;; TODO: check lsp--cur-workspace here to decide per server / project?
+    (lsp--set-configuration lsp-cfg)))
 
-  (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
-)
+(add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
 
+
+;; optionally
 (use-package lsp-ui :commands lsp-ui-mode)
+;; if you are helm user
 (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+;; if you are ivy user
 (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+;;(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-(push 'company-lsp company-backends)
+;; optionally if you want to use debugger
+;;(use-package dap-mode)
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
 
-(with-eval-after-load 'lsp-mode
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+;; optional if you want which-key integration
+(use-package which-key
+    :config
+    (which-key-mode))
+
+;; (setq lsp-ui-sideline-enable t)
+;; (setq lsp-ui-doc-enable t)
+;; (setq lsp-ui-doc-position 'bottom)
+
+;; (use-package lsp-mode
+;;   :config
+;;   (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
+;;         lsp-enable-xref t)
+
+;; ;;  (setq lsp-purescript-server-args '("--config {'purescript': {'codegenTargets': ['corefn'], 'addSpagoSources': true}}" "--stdio"))
+;;   (add-hook 'erlang-mode-hook #'lsp)
+;;   (add-hook 'purescript-mode-hook #'lsp)
+
+;;   (defun lsp-set-cfg ()
+;;     (let ((lsp-cfg `(:purescript (:codegenTargets ("corefn"))
+;;                      :addSpagoSources t)))
+;;       ;; TODO: check lsp--cur-workspace here to decide per server / project?
+;;       (lsp--set-configuration lsp-cfg)))
+
+;;   (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
+;; )
+
+;; (use-package lsp-ui :commands lsp-ui-mode)
+;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+;; (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; (push 'company-lsp company-backends)
+
+;; (with-eval-after-load 'lsp-mode
+;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
 ;; -----------------------------------------------------------------------------
 ;; Purescript
