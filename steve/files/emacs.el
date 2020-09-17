@@ -368,10 +368,16 @@
 ;; eglot - note that elsewhere we set projectile to find project roots by searching for .projectile files...
 ;; -----------------------------------------------------------------------------
 (use-package eglot)
+;;(add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio" "--config" "{\"purescript\": {\"addSpagoSources\": true, \"codegenTargets\": [\"corefn\"]}}")))
 (add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio")))
 
 (setq-default eglot-workspace-configuration
-              '((:purescript . (:addSpagoSources t :codegenTargets ["corefn"]))))
+              '((:purescript . ((:addSpagoSources . t) 
+                                (:codegenTargets . ["corefn"])
+                               )
+                )
+               )
+)
 
 (add-hook 'purescript-mode-hook 'eglot-ensure)
 (add-hook 'erlang-mode-hook 'eglot-ensure)
