@@ -233,15 +233,15 @@
 ;;(global-set-key (kbd "M-/") 'comment-or-uncomment-region-or-line)
 (global-set-key (kbd "M-\\") 'dabbrev-expand)
 
-;; ;; -----------------------------------------------------------------------------
-;; ;; Flycheck
-;; ;; -----------------------------------------------------------------------------
-;; (defun srstrong/flycheck-keys ()
-;;   "Adds keys for navigating between errors found by Flycheck."
-;;   (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
-;;   (local-set-key (kbd "C-c C-p") 'flycheck-previous-error))
+;; -----------------------------------------------------------------------------
+;; Flymake
+;; -----------------------------------------------------------------------------
+(defun srstrong/flymake-keys ()
+  "Adds keys for navigating between errors found by Flymake."
+  (local-set-key (kbd "C-c C-n") 'flymake-goto-next-error)
+  (local-set-key (kbd "C-c C-p") 'flymake-goto-prev-error))
 
-;; (add-hook 'flycheck-mode-hook 'srstrong/flycheck-keys)
+(add-hook 'flymake-mode-hook 'srstrong/flymake-keys)
 
 ;; -----------------------------------------------------------------------------
 ;; Misc
@@ -539,8 +539,6 @@
 ;;     (psc-ide-mode)
      (company-mode)
 ;;     (flycheck-mode)
-;;     (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
-;;     (local-set-key (kbd "C-c C-p") 'flycheck-previous-error)
      (turn-on-purescript-indentation)))
 
 ;; -----------------------------------------------------------------------------
@@ -602,6 +600,12 @@
 	  (lambda ()
       ;; Line numbers are pointless in neotree
       (linum-mode 0)))
+
+;; -----------------------------------------------------------------------------
+;; yasnippet
+;; -----------------------------------------------------------------------------
+(use-package yasnippet)
+(yas-global-mode 1)
 
 ;; -----------------------------------------------------------------------------
 ;; Projectile
