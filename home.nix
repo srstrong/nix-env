@@ -3,11 +3,28 @@
 let
   inherit (pkgs.stdenv.lib) optionals;
 
+  erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.14-devel.tar.gz;
+
+  purerlReleases =
+    builtins.fetchGit {
+      url = "https://github.com/purerl/nixpkgs-purerl.git";
+      ref = "master";
+      rev = "547e2ef774c69d33c7fcb5cd140e50c936681846";
+    };
+
   purerlSupport =
     builtins.fetchGit {
       url = "https://github.com/id3as/nixpkgs-purerl-support.git";
       ref = "master";
       rev = "c9a9140db5112e74030763292dc93de25adb3482";
+    };
+
+  id3asPackages =
+    builtins.fetchGit {
+      name = "id3as-packages";
+      url = "git@github.com:id3as/nixpkgs-private.git";
+      rev = "b62ac1a4382826478a3e5e3293d42dc1c60e25c1";
+      ref = "v2";
     };
 
   pls = nixpkgs.nodePackages.purescript-language-server.override {
@@ -18,11 +35,22 @@ let
       };
     };
 
+  emacs-overlay =
+    builtins.fetchGit {
+      url =
+        "https://github.com/nix-community/emacs-overlay.git";
+      ref = "master";
+      rev = "29138420e18e2480f674663476663cffc6548fb4";
+    };
+
   nixpkgs =
     import <nixpkgs> {
       overlays = [
         (import purerlSupport)
-
+        (import purerlReleases)
+        (import erlangReleases)
+        (import id3asPackages)
+        (import emacs-overlay)
       ];
     };
 
@@ -52,6 +80,10 @@ in
     stack
     ghc
 
+    nixpkgs.nixerl.erlang-23-0-3.erlang
+    nixpkgs.nixerl.erlang-23-0-3.rebar3
+
+    nixpkgs.id3as.purescript-0-13-6
     nixpkgs.purerl-support.erlang_ls-0-4-1
     pls
 
