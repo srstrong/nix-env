@@ -244,6 +244,21 @@
 (add-hook 'flymake-mode-hook 'srstrong/flymake-keys)
 
 ;; -----------------------------------------------------------------------------
+;; Flycheck
+;; -----------------------------------------------------------------------------
+(use-package flycheck 
+  :ensure t
+;;  :init (global-flycheck-mode)
+)
+
+(defun srstrong/flycheck-keys ()
+  "Adds keys for navigating between errors found by Flycheck."
+  (local-set-key (kbd "C-c C-n") 'flycheck-next-error)
+  (local-set-key (kbd "C-c C-p") 'flycheck-previous-error))
+
+(add-hook 'flycheck-mode-hook 'srstrong/flycheck-keys)
+
+;; -----------------------------------------------------------------------------
 ;; Misc
 ;; -----------------------------------------------------------------------------
 (setq echo-keystrokes 0.1
@@ -393,7 +408,11 @@
 ;;           (purescript-mode . lsp)
 ;;           (lsp-mode . lsp-enable-which-key-integration)
 ;;           )
-;;    :commands lsp)
+;;    :commands lsp
+;;    :config 
+;;      (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
+;;            lsp-enable-xref t)
+;;)
 
 ;;(defun lsp-set-cfg ()
 ;;  (let ((lsp-cfg `(:purescript (:codegenTargets ("corefn"))
