@@ -387,8 +387,8 @@
 (add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio")))
 
 (setq-default eglot-workspace-configuration
-              '((:purescript . ((:addSpagoSources . t) 
-                                (:codegenTargets . ["corefn"])
+              '((:purescript . (:addSpagoSources t
+                                :codegenTargets ["corefn"]
                                )
                 )
                )
@@ -639,9 +639,18 @@
   projectile
   :init
   (setq projectile-enable-caching t)
+  (setq projectile-project-root-files '(".projectile"))
+        ;;projectile-project-root-files #'( ".projectile" )
+  (setq projectile-project-root-files-functions #'(projectile-root-top-down
+                                                   projectile-root-top-down-recurring
+                                                   projectile-root-bottom-up
+                                                   projectile-root-local))
+;;        projectile-project-root-files-bottom-up '(".projectile" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs")
+        ;;projectile-project-root-files-top-down-recurring '(".svn" "CVS" "Makefile" ".git")
   :config
   (projectile-global-mode)
   )
+
 
 (defun my-projectile-project-find-function (dir)
   (let ((root (projectile-project-root dir)))
