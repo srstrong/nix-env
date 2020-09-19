@@ -246,7 +246,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Flycheck
 ;; -----------------------------------------------------------------------------
-(use-package flycheck 
+(use-package flycheck
   :ensure t
 ;;  :init (global-flycheck-mode)
 )
@@ -382,45 +382,47 @@
 ;; -----------------------------------------------------------------------------
 ;; eglot - note that elsewhere we set projectile to find project roots by searching for .projectile files...
 ;; -----------------------------------------------------------------------------
-(use-package eglot)
-;;(add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio" "--config" "{\"purescript\": {\"addSpagoSources\": true, \"codegenTargets\": [\"corefn\"]}}")))
-(add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio")))
+;; (use-package eglot)
+;; (add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio")))
 
-(setq-default eglot-workspace-configuration
-              '((:purescript . (:addSpagoSources t
-                                :codegenTargets ["corefn"]
-                               )
-                )
-               )
-)
+;; (setq-default eglot-workspace-configuration
+;;               '((:purescript . (:addSpagoSources t
+;;                                 :codegenTargets ["corefn"]
+;;                                )
+;;                 )
+;;                )
+;; )
 
-(add-hook 'purescript-mode-hook 'eglot-ensure)
-(add-hook 'erlang-mode-hook 'eglot-ensure)
+;; (add-hook 'purescript-mode-hook 'eglot-ensure)
+;; (add-hook 'erlang-mode-hook 'eglot-ensure)
 
 ;; -----------------------------------------------------------------------------
 ;; LSP
 ;; -----------------------------------------------------------------------------
-;;(setq lsp-keymap-prefix "C-c l")
+(setq lsp-keymap-prefix "C-c l")
 
-;;(use-package lsp-mode
-;;    :hook (
-;;           (erlang-mode . lsp)
-;;           (purescript-mode . lsp)
-;;           (lsp-mode . lsp-enable-which-key-integration)
-;;           )
-;;    :commands lsp
-;;    :config 
-;;      (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
-;;            lsp-enable-xref t)
-;;)
+(use-package lsp-mode
+   :hook (
+          (erlang-mode . lsp)
+          (purescript-mode . lsp)
+          (lsp-mode . lsp-enable-which-key-integration)
+          )
+   :commands lsp
+   :config
+     (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
+           lsp-enable-xref t)
+)
 
-;;(defun lsp-set-cfg ()
-;;  (let ((lsp-cfg `(:purescript (:codegenTargets ("corefn"))
-;;                   :addSpagoSources t)))
-;;    ;; TODO: check lsp--cur-workspace here to decide per server / project?
-;;    (lsp--set-configuration lsp-cfg)))
+ (defun lsp-set-cfg ()
+  (let ((lsp-cfg `(:purescript (:codegenTargets ["corefn"]
+                                :addSpagoSources t))))
+   ;; TODO: check lsp--cur-workspace here to decide per server / project?
+   (lsp--set-configuration lsp-cfg)))
 
-;;(add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024))
+
+(add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
 
 ;; optionally
 ;;(use-package lsp-ui :commands lsp-ui-mode)
@@ -438,33 +440,15 @@
 ;; (setq lsp-ui-doc-enable t)
 ;; (setq lsp-ui-doc-position 'bottom)
 
-;; (use-package lsp-mode
-;;   :config
-;;   (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
-;;         lsp-enable-xref t)
-
-;; ;;  (setq lsp-purescript-server-args '("--config {'purescript': {'codegenTargets': ['corefn'], 'addSpagoSources': true}}" "--stdio"))
 ;;   (add-hook 'erlang-mode-hook #'lsp)
 ;;   (add-hook 'purescript-mode-hook #'lsp)
 
-;;   (defun lsp-set-cfg ()
-;;     (let ((lsp-cfg `(:purescript (:codegenTargets ("corefn"))
-;;                      :addSpagoSources t)))
-;;       ;; TODO: check lsp--cur-workspace here to decide per server / project?
-;;       (lsp--set-configuration lsp-cfg)))
-
-;;   (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
-;; )
-
-;; (use-package lsp-ui :commands lsp-ui-mode)
-;; (use-package helm-lsp :commands helm-lsp-workspace-symbol)
-;; (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-;; (push 'company-lsp company-backends)
-
-;; (with-eval-after-load 'lsp-mode
-;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+;; -----------------------------------------------------------------------------
+;; which-key
+;; -----------------------------------------------------------------------------
+(use-package which-key)
+(require 'which-key)
+(which-key-mode)
 
 ;; -----------------------------------------------------------------------------
 ;; powerline
