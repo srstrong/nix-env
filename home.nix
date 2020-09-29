@@ -28,11 +28,11 @@ let
     };
 
   pls = nixpkgs.nodePackages.purescript-language-server.override {
-      version = "0.13.5";
-      src = builtins.fetchurl {
-        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.13.5.tgz";
-        sha256 = "0jr3hfa4ywb97ybrq4b64pbngwd1x297vppps7cqf4mmiwz9chb9";
-      };
+      version = "0.14.2";
+#      src = builtins.fetchurl {
+#        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.13.5.tgz";
+#        sha256 = "0jr3hfa4ywb97ybrq4b64pbngwd1x297vppps7cqf4mmiwz9chb9";
+#      };
     };
 
   emacs-overlay =
@@ -40,7 +40,7 @@ let
       url =
         "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      rev = "29138420e18e2480f674663476663cffc6548fb4";
+      rev = "cd8519f61d1c251070bf90f0cc07fa12846a2b07";
     };
 
   nixpkgs =
@@ -79,6 +79,7 @@ in
     zlib.dev
     stack
     ghc
+    ccls # C language server
 
     nixpkgs.nixerl.erlang-23-0-3.erlang
     nixpkgs.nixerl.erlang-23-0-3.rebar3
