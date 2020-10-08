@@ -28,11 +28,11 @@ let
     };
 
   pls = nixpkgs.nodePackages.purescript-language-server.override {
-      version = "0.14.2";
-#      src = builtins.fetchurl {
-#        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.13.5.tgz";
+      version = "0.14.3";
+      src = builtins.fetchurl {
+        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.14.3.tgz";
 #        sha256 = "0jr3hfa4ywb97ybrq4b64pbngwd1x297vppps7cqf4mmiwz9chb9";
-#      };
+      };
     };
 
   emacs-overlay =
@@ -67,6 +67,8 @@ in
     wget
 
     # Development
+    autoconf
+    ncurses6
     gitAndTools.tig
     git-lfs
     dhall
@@ -89,7 +91,14 @@ in
     pls
 
     # inetutils
-  ] ++ optionals stdenv.isLinux [ glibcLocales ] ++ optionals stdenv.isDarwin [ darwin.apple_sdk.frameworks.Security ];
+  ] ++ optionals stdenv.isLinux [
+                 glibcLocales
+       ]
+    ++ optionals stdenv.isDarwin [
+                 darwin.apple_sdk.frameworks.Security
+                 darwin.apple_sdk.frameworks.Carbon
+                 darwin.apple_sdk.frameworks.Cocoa
+       ];
 
   # Configuration
   imports = [

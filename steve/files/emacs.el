@@ -413,11 +413,11 @@
            lsp-enable-xref t)
 )
 
- (defun lsp-set-cfg ()
+(defun lsp-set-cfg ()
   (let ((lsp-cfg `(:purescript (:codegenTargets ["corefn"]
                                 :addSpagoSources t))))
-   ;; TODO: check lsp--cur-workspace here to decide per server / project?
-   (lsp--set-configuration lsp-cfg)))
+    ;; TODO: check lsp--cur-workspace here to decide per server / project?
+    (lsp--set-configuration lsp-cfg)))
 
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024))
