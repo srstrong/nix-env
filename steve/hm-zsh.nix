@@ -32,9 +32,6 @@
       # Colors please
       eval "$(${pkgs.coreutils}/bin/dircolors -b)"
 
-      # Hide default user prompt
-#      DEFAULT_USER=''${USER}
-
       # Let Java know that we're using a non-reparenting WM
       export _JAVA_AWT_WM_NONREPARENTING=1
 
@@ -48,12 +45,11 @@
       alias emacs="emacs -nw"
       alias dhall-format="dhall format"
 
-      export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"
+#      export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"
 
-      # Use GPG for SSH
-#      export GPG_TTY="$(tty)"
-#      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-#      gpgconf --launch gpg-agent
+      autoload -Uz compinit
+      compinit
+      kitty + complete setup zsh | source /dev/stdin
 
     '';
     profileExtra = ''

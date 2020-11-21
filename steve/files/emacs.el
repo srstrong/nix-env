@@ -12,7 +12,6 @@
 (setq inhibit-splash-screen t
       inhibit-startup-screen t
       initial-scratch-message nil)
-;;      initial-major-mode 'org-mode)
 
 ;; -----------------------------------------------------------------------------
 ;; Scroll bar, Tool bar, Menu bar
@@ -93,7 +92,6 @@
 (require 'whitespace)
 
 (unless (member 'whitespace-mode prog-mode-hook)
-;;  (add-hook 'before-save-hook 'delete-trailing-whitespace)
   (add-hook 'prog-mode-hook 'whitespace-mode))
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (setq-default indicate-empty-lines t)
@@ -149,17 +147,16 @@
 (line-number-mode 1)
 (column-number-mode 1)
 
-;; -----------------------------------------------------------------------------
-;; Configure spaceline
-;; -----------------------------------------------------------------------------
-;; TODO - commented out since it's really slow...
-;; (use-package spaceline)
-;; (require 'spaceline-config)
-;; (spaceline-emacs-theme)
-;; (spaceline-helm-mode)
-;; (setq powerline-default-separator 'rounded)
-;; (setq powerline-height 17)
-;; (spaceline-compile)
+(use-package rich-minority)
+(require 'rich-minority)
+
+(rich-minority-mode 1)
+
+(setq rm-blacklist
+      (format "^ \\(%s\\)$"
+              (mapconcat #'identity
+                         '("Fly.*" "Projectile.*" "PgLn" "yas" "WK" "company" "Ind" "EditorConfig" "h-i-g" "ARev" "ws" "ElDoc" "$")
+                         "\\|")))
 
 ;; -----------------------------------------------------------------------------
 ;; Backup files
@@ -276,22 +273,108 @@
 ;;  kept-old-versions 2
 ;;  version-control t) ; use versioned backups
 
-;; ;; -----------------------------------------------------------------------------
-;; ;; ag
-;; ;; -----------------------------------------------------------------------------
+;; -----------------------------------------------------------------------------
+;; ag
+;; -----------------------------------------------------------------------------
 (use-package ag)
 (use-package helm-ag)
 (defalias 'ack 'helm-ag)
 (require 'helm-ag)
 
+;; -----------------------------------------------------------------------------
+;; ripgrep
+;; -----------------------------------------------------------------------------
+(use-package ripgrep)
+
 ;; ;; -----------------------------------------------------------------------------
 ;; ;; Smex
 ;; ;; -----------------------------------------------------------------------------
-(use-package smex)
-(setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;;(use-package smex)
+;;(setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
+;;(smex-initialize)
+;;(global-set-key (kbd "M-x") 'smex)
+;;(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+;; -----------------------------------------------------------------------------
+;; yasnippet
+;; -----------------------------------------------------------------------------
+(use-package yasnippet)
+(yas-global-mode 1)
+
+;; -----------------------------------------------------------------------------
+;; Projectile
+;; -----------------------------------------------------------------------------
+(use-package
+  projectile
+  :init
+  (setq projectile-enable-caching t)
+  (setq projectile-project-root-files '(".projectile"))
+        ;;projectile-project-root-files #'( ".projectile" )
+  (setq projectile-project-root-files-functions #'(projectile-root-top-down
+                                                   projectile-root-top-down-recurring
+                                                   projectile-root-bottom-up
+                                                   projectile-root-local))
+;;        projectile-project-root-files-bottom-up '(".projectile" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs")
+        ;;projectile-project-root-files-top-down-recurring '(".svn" "CVS" "Makefile" ".git")
+  :config
+  (projectile-global-mode)
+  )
+
+
+(defun my-projectile-project-find-function (dir)
+  (let ((root (projectile-project-root dir)))
+    (and root (cons 'transient root))))
+
+(projectile-mode t)
+
+(with-eval-after-load 'project
+  (add-to-list 'project-find-functions 'my-projectile-project-find-function))
+
+;; -----------------------------------------------------------------------------
+;; Ivy / Counsel
+;; -----------------------------------------------------------------------------
+(use-package ivy)
+(use-package ivy-hydra)
+(use-package counsel)
+(use-package counsel-projectile)
+
+(setq ivy-use-virtual-buffers t)
+(setq ivy-count-format "(%d/%d) ")
+
+(setq projectile-completion-system 'ivy)
+
+(global-set-key (kbd "C-s") 'swiper-isearch)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "M-y") 'counsel-yank-pop)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "<f2> j") 'counsel-set-variable)
+(global-set-key (kbd "C-x b") 'ivy-switch-buffer)
+(global-set-key (kbd "C-c v") 'ivy-push-view)
+(global-set-key (kbd "C-c V") 'ivy-pop-view)
+
+(global-set-key (kbd "C-c c s a") 'counsel-ag)
+(global-set-key (kbd "C-c c s r") 'counsel-rg)
+
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(counsel-projectile-mode 1)
+
+;; Make sure RET navigates into folders rather than opening dired
+(define-key ivy-minibuffer-map (kbd "C-j") #'ivy-immediate-done)
+(define-key ivy-minibuffer-map (kbd "RET") #'ivy-alt-done)
+
+;; -----------------------------------------------------------------------------
+;; Or Helm, but think we prefer ivy
+;; -----------------------------------------------------------------------------
+;;(use-package helm)
+;;(global-set-key (kbd "M-x") 'helm-M-x)
+;;(global-set-key (kbd "C-x b") 'helm-mini)
+;;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+;;(global-set-key (kbd "C-x a g") 'helm-ag)
 
 ;; -----------------------------------------------------------------------------
 ;; Textmate - marked as broken in nix
@@ -304,10 +387,10 @@
 ;; -----------------------------------------------------------------------------
 ;; IDO
 ;; -----------------------------------------------------------------------------
-(ido-mode t)
-(setq ido-enable-flex-matching t
-      ido-use-virtual-buffers t)
-(setq ido-decorations (quote ("\n-> "     "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
+;;(ido-mode t)
+;;(setq ido-enable-flex-matching t
+;;      ido-use-virtual-buffers t)
+;;(setq ido-decorations (quote ("\n-> "     "" "\n   " "\n   ..." "[" "]" " [No match]" " [Matched]" " [Not readable]" " [Too big]" " [Confirm]")))
 
 ;; -----------------------------------------------------------------------------
 ;; Column number mode
@@ -328,18 +411,16 @@
 (setq erlang-electric-commands nil)
 (require 'erlang-start)
 
-;;(add-hook 'erlang-mode-hook #'lsp)
-
 (add-hook 'erlang-mode-hook 'srstrong/add-watchwords)
 ;;(add-hook 'erlang-mode-hook 'srstrong/turn-on-hl-line-mode)
 (add-hook 'erlang-mode-hook 'whitespace-mode)
 (add-hook 'erlang-mode-hook 'company-mode)
 (add-hook 'erlang-mode-hook (lambda() (setq indent-tabs-mode nil)))
-(add-hook 'erlang-mode-hook (lambda () (setq erlang-indent-level tab-width)))
+(add-hook 'erlang-mode-hook (lambda() (setq erlang-indent-level tab-width)))
 ;;(add-hook 'erlang-mode-hook (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
 ;;-(add-hook 'erlang-mode-hook #'company-erlang-init)
 
-(add-to-list 'auto-mode-alist '("\\.erlang$" . erlang-mode)) ;; User customizations file
+(add-to-list 'auto-mode-alist '("\\.erlang$"      . erlang-mode)) ;; User customizations file
 (add-to-list 'auto-mode-alist '(".*\\.app\\'"     . erlang-mode))
 (add-to-list 'auto-mode-alist '(".*app\\.src\\'"  . erlang-mode))
 (add-to-list 'auto-mode-alist '(".*\\.config\\'"  . erlang-mode))
@@ -409,8 +490,10 @@
           )
    :commands lsp
    :config
-     (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
-           lsp-enable-xref t)
+   (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
+         lsp-modeline-code-actions-segments '(count icon)
+         lsp-modeline-diagnostics-mode 1
+         lsp-enable-xref t)
 )
 
 (defun lsp-set-cfg ()
@@ -424,24 +507,31 @@
 
 (add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
 
-;; optionally
-;;(use-package lsp-ui :commands lsp-ui-mode)
-;; if you are helm user
+(use-package lsp-ui
+  :commands (lsp-ui-mode lsp-ui-imenu)
+  :after (lsp-mode)
+  :bind (:map lsp-ui-mode-map
+         ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+         ([remap xref-find-references] . lsp-ui-peek-find-references)
+         ("C-c u" . lsp-ui-imenu))
+  :config
+  (setq lsp-ui-sideline-enable nil
+        lsp-ui-doc-enable nil
+        lsp-ui-imenu-window-width 40
+        )
+)
+
+(use-package lsp-treemacs
+  :commands (lsp-treemacs-errors-list lsp-treemacs-symbols)
+  :after (lsp-mode)
+  :init (define-key lsp-mode-map [remap xref-find-apropos] #'ivy-lsp-workspace-symbol)
+  :config
+  (setq lsp-treemacs-sync-mode 1
+        )
+)
+
 ;;(use-package helm-lsp :commands helm-lsp-workspace-symbol)
-;; if you are ivy user
-;;(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-;;(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-;; optionally if you want to use debugger
-;;(use-package dap-mode)
-;; (use-package dap-LANGUAGE) to load the dap adapter for your language
-
-;; (setq lsp-ui-sideline-enable t)
-;; (setq lsp-ui-doc-enable t)
-;; (setq lsp-ui-doc-position 'bottom)
-
-;;   (add-hook 'erlang-mode-hook #'lsp)
-;;   (add-hook 'purescript-mode-hook #'lsp)
+(use-package lsp-ivy :commands ivy-lsp-workspace-symbol)
 
 ;; -----------------------------------------------------------------------------
 ;; which-key
@@ -453,9 +543,9 @@
 ;; -----------------------------------------------------------------------------
 ;; powerline
 ;; -----------------------------------------------------------------------------
-(use-package powerline)
-(require 'powerline)
-(powerline-default-theme)
+;;(use-package powerline)
+;;(require 'powerline)
+;;(powerline-default-theme)
 
 ;; -----------------------------------------------------------------------------
 ;; shell-script-mode
@@ -535,19 +625,12 @@
 ;; Purescript
 ;; -----------------------------------------------------------------------------
 (use-package purescript-mode)
-;;(use-package psc-ide)
 
-;;(add-to-list 'load-path "~/dev/purescript/purty/")
-;;(require 'purty)
-
-;;(add-hook 'purescript-mode-hook #'lsp)
 (add-hook 'purescript-mode-hook (lambda() (turn-on-purescript-indentation)))
 
 (add-hook 'purescript-mode-hook
    (lambda ()
-;;     (psc-ide-mode)
      (company-mode)
-;;     (flycheck-mode)
      (turn-on-purescript-indentation)))
 
 ;; -----------------------------------------------------------------------------
@@ -611,41 +694,6 @@
       (linum-mode 0)))
 
 ;; -----------------------------------------------------------------------------
-;; yasnippet
-;; -----------------------------------------------------------------------------
-(use-package yasnippet)
-(yas-global-mode 1)
-
-;; -----------------------------------------------------------------------------
-;; Projectile
-;; -----------------------------------------------------------------------------
-(use-package
-  projectile
-  :init
-  (setq projectile-enable-caching t)
-  (setq projectile-project-root-files '(".projectile"))
-        ;;projectile-project-root-files #'( ".projectile" )
-  (setq projectile-project-root-files-functions #'(projectile-root-top-down
-                                                   projectile-root-top-down-recurring
-                                                   projectile-root-bottom-up
-                                                   projectile-root-local))
-;;        projectile-project-root-files-bottom-up '(".projectile" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs")
-        ;;projectile-project-root-files-top-down-recurring '(".svn" "CVS" "Makefile" ".git")
-  :config
-  (projectile-global-mode)
-  )
-
-
-(defun my-projectile-project-find-function (dir)
-  (let ((root (projectile-project-root dir)))
-    (and root (cons 'transient root))))
-
-(projectile-mode t)
-
-(with-eval-after-load 'project
-  (add-to-list 'project-find-functions 'my-projectile-project-find-function))
-
-;; -----------------------------------------------------------------------------
 ;; General
 ;; -----------------------------------------------------------------------------
 
@@ -667,4 +715,14 @@
 
 (global-display-line-numbers-mode)
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(line-number ((t (:inherit (powerline-inactive2 shadow default))))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(safe-local-variable-values '((psc-ide-codegen "corefn"))))

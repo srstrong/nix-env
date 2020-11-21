@@ -3,7 +3,7 @@
 let
   inherit (pkgs.stdenv.lib) optionals;
 
-  erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.14-devel.tar.gz;
+  erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.15-devel.tar.gz;
 
   purerlReleases =
     builtins.fetchGit {
@@ -12,26 +12,26 @@ let
       rev = "547e2ef774c69d33c7fcb5cd140e50c936681846";
     };
 
+  # Only used for erlang_ls, which needs to move to id3asPackages...
   purerlSupport =
     builtins.fetchGit {
-      url = "https://github.com/id3as/nixpkgs-purerl-support.git";
-      ref = "master";
-      rev = "c9a9140db5112e74030763292dc93de25adb3482";
+      url = /Users/steve/dev/nixpkgs-purerl-support; # "https://github.com/id3as/nixpkgs-purerl-support.git";
+#      ref = "master";
+#      rev = "c9a9140db5112e74030763292dc93de25adb3482";
     };
 
   id3asPackages =
     builtins.fetchGit {
       name = "id3as-packages";
       url = "git@github.com:id3as/nixpkgs-private.git";
-      rev = "b62ac1a4382826478a3e5e3293d42dc1c60e25c1";
-      ref = "v2";
+      rev = "3ebb89abfd4dc05885e90ad6d2980ea1b38f9cfe";
+      ref = "v3";
     };
 
   pls = nixpkgs.nodePackages.purescript-language-server.override {
-      version = "0.14.3";
+      version = "0.14.4";
       src = builtins.fetchurl {
-        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.14.3.tgz";
-#        sha256 = "0jr3hfa4ywb97ybrq4b64pbngwd1x297vppps7cqf4mmiwz9chb9";
+        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.14.4.tgz";
       };
     };
 
@@ -40,14 +40,14 @@ let
       url =
         "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      rev = "cd8519f61d1c251070bf90f0cc07fa12846a2b07";
+      rev = "c19934e5e2b500e0418e562e164c8c90a961d3f9";
     };
 
   nixpkgs =
     import <nixpkgs> {
       overlays = [
-        (import purerlSupport)
         (import purerlReleases)
+        (import purerlSupport)
         (import erlangReleases)
         (import id3asPackages)
         (import emacs-overlay)
@@ -61,10 +61,14 @@ in
     # GNU > BSD :)
     coreutils
 
+    alacritty
+    kitty
+
     # Useful for system administration
     htop
     iftop
     wget
+    rsync
 
     # Development
     autoconf
@@ -81,14 +85,17 @@ in
     zlib.dev
     stack
     ghc
+    gcc10
     ccls # C language server
 
-    nixpkgs.nixerl.erlang-23-0-3.erlang
-    nixpkgs.nixerl.erlang-23-0-3.rebar3
+    (nixpkgs.nixerl.erlang-23-0-4.erlang.override { wxSupport = false; })
+    (nixpkgs.nixerl.erlang-23-0-4.rebar3.override { erlang = (nixpkgs.nixerl.erlang-23-0-4.erlang.override { wxSupport = false; }); })
 
-    nixpkgs.id3as.purescript-0-13-6
-    nixpkgs.purerl-support.erlang_ls-0-4-1
+    nixpkgs.id3as.purescript-0-13-8
     pls
+
+    nixpkgs.purerl-support.erlang_ls-0-5-1
+
 
     # inetutils
   ] ++ optionals stdenv.isLinux [
@@ -98,11 +105,12 @@ in
                  darwin.apple_sdk.frameworks.Security
                  darwin.apple_sdk.frameworks.Carbon
                  darwin.apple_sdk.frameworks.Cocoa
+                 darwin.apple_sdk.frameworks.AGL
        ];
 
   # Configuration
   imports = [
-    ./steve/hm-fish.nix
+   ./steve/hm-fish.nix
     ./steve/hm-tmux.nix
     ./steve/hm-git.nix
     ./steve/hm-emacs.nix
@@ -110,6 +118,12 @@ in
     ./steve/hm-direnv.nix
     ./steve/hm-lorri.nix
   ];
+
+  home.file = {
+    ".config/kitty/kitty.conf".source = ./steve/dotfiles/kitty.conf;
+    ".alacritty.yml".source = ./steve/dotfiles/alacritty.yml;
+    ".ssh/config".source = ./steve/dotfiles/ssh_config;
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

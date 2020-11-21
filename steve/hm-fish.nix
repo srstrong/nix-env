@@ -25,6 +25,7 @@
 
        interactiveShellInit =
          ''
+            kitty + complete setup fish | source
          '';
        promptInit =
          ''
@@ -83,7 +84,7 @@
             end
 
             function fish_title
-              set defaulted_name $window_name localhost 
+              set defaulted_name $window_name localhost
               echo $defaulted_name[1] #: (status current-command) (__fish_pwd)
             end
 
