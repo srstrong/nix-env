@@ -155,7 +155,8 @@
 (setq rm-blacklist
       (format "^ \\(%s\\)$"
               (mapconcat #'identity
-                         '("Fly.*" "Projectile.*" "PgLn" "yas" "WK" "company" "Ind" "EditorConfig" "h-i-g" "ARev" "ws" "ElDoc" "$")
+                         ;;'("Fly.*" "Projectile.*" "PgLn" "yas" "WK" "company" "Ind" "EditorConfig" "h-i-g" "ARev" "ws" "ElDoc" "$")
+                         '( "Projectile.*" "PgLn" "yas" "WK" "company" "Ind" "EditorConfig" "h-i-g" "ARev" "ws" "ElDoc" "$")
                          "\\|")))
 
 ;; -----------------------------------------------------------------------------
@@ -460,9 +461,9 @@
 
 ;; (erlang-flymake-only-on-save)
 
-;; -----------------------------------------------------------------------------
-;; eglot - note that elsewhere we set projectile to find project roots by searching for .projectile files...
-;; -----------------------------------------------------------------------------
+;;-----------------------------------------------------------------------------
+;;eglot - note that elsewhere we set projectile to find project roots by searching for .projectile files...
+;;-----------------------------------------------------------------------------
 ;; (use-package eglot)
 ;; (add-to-list 'eglot-server-programs '(purescript-mode . ("purescript-language-server" "--stdio")))
 
@@ -493,7 +494,10 @@
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
          lsp-modeline-code-actions-segments '(count icon)
          lsp-modeline-diagnostics-mode 1
-         lsp-enable-xref t)
+         lsp-enable-xref t
+         lsp-log-io nil
+         lsp-diagnostic-clean-after-change nil
+         )
 )
 
 (defun lsp-set-cfg ()
