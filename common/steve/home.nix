@@ -96,7 +96,6 @@ in
 
     nixpkgs.purerl-support.erlang_ls-0-5-1
 
-
     # inetutils
   ] ++ optionals stdenv.isLinux [
                  glibcLocales
@@ -110,19 +109,19 @@ in
 
   # Configuration
   imports = [
-   ./steve/hm-fish.nix
-    ./steve/hm-tmux.nix
-    ./steve/hm-git.nix
-    ./steve/hm-emacs.nix
-    ./steve/hm-zsh.nix
-    ./steve/hm-direnv.nix
-    ./steve/hm-lorri.nix
+    ./hm-fish.nix
+    ./hm-tmux.nix
+    ./hm-git.nix
+    ./hm-emacs.nix
+    ./hm-zsh.nix
+    ./hm-direnv.nix
+    ./hm-lorri.nix
   ];
 
   home.file = {
-    ".config/kitty/kitty.conf".source = ./steve/dotfiles/kitty.conf;
-    ".alacritty.yml".source = ./steve/dotfiles/alacritty.yml;
-    ".ssh/config".source = ./steve/dotfiles/ssh_config;
+    ".config/kitty/kitty.conf".source = ./dotfiles/kitty.conf;
+    ".alacritty.yml".source = ./dotfiles/alacritty.yml;
+    ".ssh/config".source = ./dotfiles/ssh_config;
   };
 
   # Let Home Manager install and manage itself.
