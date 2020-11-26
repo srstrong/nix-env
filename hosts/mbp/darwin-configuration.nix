@@ -4,6 +4,9 @@
   imports =
     [ # Common things
       ./../../common
+
+      # mbp user specific stuff
+      ./steve
     ];
 
   system.defaults.dock.autohide = true;

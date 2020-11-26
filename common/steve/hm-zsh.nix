@@ -49,7 +49,7 @@
 
       autoload -Uz compinit
       compinit
-      kitty + complete setup zsh | source /dev/stdin
+#      kitty + complete setup zsh | source /dev/stdin
 
     '';
     profileExtra = ''

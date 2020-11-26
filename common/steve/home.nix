@@ -16,8 +16,6 @@ let
   purerlSupport =
     builtins.fetchGit {
       url = /Users/steve/dev/nixpkgs-purerl-support; # "https://github.com/id3as/nixpkgs-purerl-support.git";
-#      ref = "master";
-#      rev = "c9a9140db5112e74030763292dc93de25adb3482";
     };
 
   id3asPackages =
@@ -94,7 +92,7 @@ in
     nixpkgs.id3as.purescript-0-13-8
     pls
 
-    nixpkgs.purerl-support.erlang_ls-0-5-1
+    # (nixpkgs.purerl-support.erlang_ls-0-5-1.override { erlang = (nixpkgs.nixerl.erlang-23-0-4.erlang.override { wxSupport = false; }); })
 
     # inetutils
   ] ++ optionals stdenv.isLinux [
