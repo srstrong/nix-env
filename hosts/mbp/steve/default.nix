@@ -6,7 +6,7 @@
     ];
 
   services.skhd = {
-    enable = true;
+    enable = false;
     skhdConfig = builtins.readFile ./dotfiles/skhdrc;
   };
 }

@@ -2,7 +2,7 @@
 
 {
   services.yabai = {
-    enable = true;
+    enable = false;
     package = pkgs.yabai;
     extraConfig = ''
       sudo yabai --load-sa
@@ -10,16 +10,16 @@
 
       # global settings
       yabai -m config mouse_follows_focus          on
-      yabai -m config focus_follows_mouse          autoraise
+      yabai -m config focus_follows_mouse          off
       yabai -m config window_placement             second_child
       yabai -m config window_topmost               on
-      yabai -m config window_shadow                off
-      yabai -m config window_opacity               on
-      yabai -m config window_opacity_duration      0.0
-      yabai -m config active_window_opacity        1.0
-      yabai -m config normal_window_opacity        0.85
-      yabai -m config window_border                on
-      yabai -m config window_border_width          6
+      yabai -m config window_shadow                on
+      yabai -m config window_opacity               off
+      #yabai -m config window_opacity_duration      0.0
+      #yabai -m config active_window_opacity        1.0
+      #yabai -m config normal_window_opacity        0.85
+      #yabai -m config window_border                on
+      #yabai -m config window_border_width          6
       yabai -m config active_window_border_color   0xffa35763
       yabai -m config normal_window_border_color   0xff353c54
       yabai -m config insert_feedback_color        0xaa7c5c9c
@@ -30,7 +30,7 @@
       yabai -m config mouse_action2                resize
 
       # general space settings
-      yabai -m config layout                       bsp
+      yabai -m config layout                       float
       yabai -m config top_padding                  40
       yabai -m config bottom_padding               40
       yabai -m config left_padding                 40
