@@ -2,7 +2,7 @@ do nix install
 * curl -L https://nixos.org/nix/install | sh
 
 do nix-darwin install:
-* nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installere
+* nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
 * ./result/bin/darwin-installer
 
 This adds (amongst a ton of other stuff) a ~/.nixpkgs/darwin-configuration.nix

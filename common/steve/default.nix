@@ -5,6 +5,7 @@
             ];
 
   users.users.steve = {
+    home = "/Users/steve";
     shell = "${pkgs.zsh}/bin/zsh";
   };
 

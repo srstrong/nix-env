@@ -343,6 +343,7 @@
 (setq ivy-count-format "(%d/%d) ")
 
 (setq projectile-completion-system 'ivy)
+(setq ivy-magic-tilde nil)
 
 (global-set-key (kbd "C-s") 'swiper-isearch)
 (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -492,29 +493,22 @@
    :commands lsp
    :config
    (lsp-register-custom-settings
-   '(("purescript.codegenTargets" ["corefn"])
-     ;;("purescript.pscIdelogLevel" "all")
-     ("purescript.addSpagoSources" t)))
+    '(("purescript.codegenTargets" ["corefn"])
+      ("purescript.addPscPackageSources" t)
+      ;;("purescript.pscIdelogLevel" "all")
+      ("purescript.addSpagoSources" t)))
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
          lsp-modeline-code-actions-segments '(count icon)
          lsp-modeline-diagnostics-mode 1
          lsp-enable-xref t
-         lsp-log-io nil
+         lsp-log-io t ;; nil
          lsp-diagnostic-clean-after-change nil
-         ;; lsp-purescript-server-args '("--stdio" "--log" "/tmp/pls.log" "--config" "{'settings': {'purescript' : {'codegenTargets': ['corefn']}}}")
+         ;; lsp-purescript-server-args '("--stdio" "--log" "/tmp/pls.log")'
          )
 )
 
-(defun lsp-set-cfg ()
-  (let ((lsp-cfg `(:purescript (:codegenTargets ["corefn"]
-                                :addSpagoSources t))))
-    ;; TODO: check lsp--cur-workspace here to decide per server / project?
-    (lsp--set-configuration lsp-cfg)))
-
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024))
-
-(add-hook 'lsp-after-initialize-hook 'lsp-set-cfg)
 
 (use-package lsp-ui
   :commands (lsp-ui-mode lsp-ui-imenu)
@@ -524,10 +518,14 @@
          ([remap xref-find-references] . lsp-ui-peek-find-references)
          ("C-c u" . lsp-ui-imenu))
   :config
-  (setq lsp-ui-sideline-enable nil
-        lsp-ui-doc-enable nil
+  (setq lsp-ui-sideline-diagnostic-max-lines 20
+        lsp-ui-sideline-delay 2
+        lsp-ui-sideline-show-diagnostics nil
+        lsp-ui-sideline-show-code-actions nil
+        lsp-ui-doc-delay 2
+;;        lsp-ui-doc-enable nil
         lsp-ui-imenu-window-width 40
-        )
+  )
 )
 
 (use-package lsp-treemacs
@@ -728,7 +726,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(line-number ((t (:inherit (powerline-inactive2 shadow default))))))
+ '(line-number ((t (:inherit (powerline-inactive2 shadow default)))))
+)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

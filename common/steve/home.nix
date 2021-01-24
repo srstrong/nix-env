@@ -3,19 +3,13 @@
 let
   inherit (pkgs.stdenv.lib) optionals;
 
-  erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.15-devel.tar.gz;
+  erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.18-devel.tar.gz;
 
   purerlReleases =
     builtins.fetchGit {
       url = "https://github.com/purerl/nixpkgs-purerl.git";
       ref = "master";
       rev = "547e2ef774c69d33c7fcb5cd140e50c936681846";
-    };
-
-  # Only used for erlang_ls, which needs to move to id3asPackages...
-  purerlSupport =
-    builtins.fetchGit {
-      url = /Users/steve/dev/nixpkgs-purerl-support; # "https://github.com/id3as/nixpkgs-purerl-support.git";
     };
 
   id3asPackages =
@@ -45,12 +39,17 @@ let
     import <nixpkgs> {
       overlays = [
         (import purerlReleases)
-        (import purerlSupport)
         (import erlangReleases)
         (import id3asPackages)
         (import emacs-overlay)
       ];
     };
+
+  erlangChannel = nixpkgs.nixerl.erlang-23-2-1.overrideScope' (self: super: {
+    erlang = super.erlang.override {
+      wxSupport = false;
+    };
+  });
 
 in
 {
@@ -81,18 +80,17 @@ in
     python27Packages.jsmin
     websocat
     zlib.dev
-    stack
+    #stack
     ghc
     gcc10
     ccls # C language server
 
-    (nixpkgs.nixerl.erlang-23-0-4.erlang.override { wxSupport = false; })
-    (nixpkgs.nixerl.erlang-23-0-4.rebar3.override { erlang = (nixpkgs.nixerl.erlang-23-0-4.erlang.override { wxSupport = false; }); })
+    erlangChannel.erlang
+    erlangChannel.rebar3
+    erlangChannel.erlang-ls
 
     nixpkgs.id3as.purescript-0-13-8
     pls
-
-    # (nixpkgs.purerl-support.erlang_ls-0-5-1.override { erlang = (nixpkgs.nixerl.erlang-23-0-4.erlang.override { wxSupport = false; }); })
 
     # inetutils
   ] ++ optionals stdenv.isLinux [
@@ -120,6 +118,7 @@ in
     ".config/kitty/kitty.conf".source = ./dotfiles/kitty.conf;
     ".alacritty.yml".source = ./dotfiles/alacritty.yml;
     ".ssh/config".source = ./dotfiles/ssh_config;
+    "Library/Application\ Support/erlang_ls".source = ./dotfiles/erlang-ls-config.yaml;
   };
 
   # Let Home Manager install and manage itself.

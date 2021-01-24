@@ -2,11 +2,11 @@
 
 {
   imports =
-    [ ./yabai.nix
+    [ #./yabai.nix
     ];
 
   services.skhd = {
-    enable = false;
+    enable = false; #true;
     skhdConfig = builtins.readFile ./dotfiles/skhdrc;
   };
 }

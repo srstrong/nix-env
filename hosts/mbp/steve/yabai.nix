@@ -1,9 +1,21 @@
-{ config, pkgs, lib, ... }:
-
+{ config, pkgs, lib, ...}: #, Carbon, Cocoa, ScriptingBridge, SkyLight, xxd, ... }:
+let
+  darwin = pkgs.darwin.override {};
+  apple_sdk = pkgs.darwin.apple_sdk {};
+in
 {
   services.yabai = {
-    enable = false;
-    package = pkgs.yabai;
+    enable = true;
+    #package = pkgs.yabai;
+    package = (pkgs.yabai.overrideAttrs (oldAttrs: {
+                                           version = "3.3.6";
+                                           buildInputs = [ darwin.apple_sdk.frameworks.Carbon
+                                                           darwin.apple_sdk.frameworks.Cocoa
+                                                           darwin.apple_sdk.frameworks.ScriptingBridge
+                                                           darwin.apple_sdk.frameworks.SkyLight
+                                                           pkgs.unixtools.xxd
+                                                         ];
+                                        }));
     extraConfig = ''
       sudo yabai --load-sa
       yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
