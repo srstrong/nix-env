@@ -47,6 +47,7 @@
 
 #      export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"
 
+      export ERL_AFLAGS="-kernel shell_history enabled"
       autoload -Uz compinit
       compinit
 #      kitty + complete setup zsh | source /dev/stdin

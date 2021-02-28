@@ -3,7 +3,13 @@
 let
   inherit (pkgs.stdenv.lib) optionals;
 
-  erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.18-devel.tar.gz;
+  #erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.18-devel.tar.gz;
+
+  erlangReleases = builtins.fetchGit {
+    url = "/Users/steve/dev/nixpkgs-nixerl";
+    #ref = "master";
+    #rev = "efb3975b312ccbbbae2ce9702c6f3e9fbc9fdeaf";
+  };
 
   purerlReleases =
     builtins.fetchGit {
@@ -27,28 +33,16 @@ let
       };
     };
 
-  emacs-overlay =
-    builtins.fetchGit {
-      url =
-        "https://github.com/nix-community/emacs-overlay.git";
-      ref = "master";
-      rev = "c19934e5e2b500e0418e562e164c8c90a961d3f9";
-    };
-
   nixpkgs =
     import <nixpkgs> {
       overlays = [
         (import purerlReleases)
         (import erlangReleases)
         (import id3asPackages)
-        (import emacs-overlay)
       ];
     };
 
   erlangChannel = nixpkgs.nixerl.erlang-23-2-1.overrideScope' (self: super: {
-    erlang = super.erlang.override {
-      wxSupport = false;
-    };
   });
 
 in

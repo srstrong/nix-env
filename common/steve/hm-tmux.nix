@@ -13,7 +13,7 @@ in
     enable = true;
     extraConfig = ''
       set -g history-limit 16384
-      set -g mouse on
+      # set -g mouse on
 
       # bind-key -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
 
@@ -42,7 +42,6 @@ in
       #             send-keys -X select-line \; \
       #             run-shell "sleep .5s" \; \
       #             send-keys -X copy-pipe "pbcopy"
-
 
       # Enable true-color for terminal type under which tmux runs
       set -ga terminal-overrides ",xterm-256color:Tc"

@@ -2,10 +2,9 @@
 let
   emacs-overlay =
     builtins.fetchGit {
-      url =
-        "https://github.com/nix-community/emacs-overlay.git";
+      url = "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      rev = "29138420e18e2480f674663476663cffc6548fb4";
+      rev = "6f1b47652747b10b6e7e42377baf2bafb95cc854";
     };
 
   nixpkgs =
@@ -23,7 +22,7 @@ in
     enable = true;
     package = (nixpkgs.emacsWithPackagesFromUsePackage {
              config = ./files/emacs.el;
-             package = nixpkgs.emacsGit-nox; 
+             package = nixpkgs.emacsGit-nox;
              alwaysEnsure = true;
              });
   };
