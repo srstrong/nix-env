@@ -15,7 +15,14 @@ let
     builtins.fetchGit {
       url = "https://github.com/purerl/nixpkgs-purerl.git";
       ref = "master";
-      rev = "547e2ef774c69d33c7fcb5cd140e50c936681846";
+      rev = "01820500971cf0772a505ca055a9fd58c8729320";
+    };
+
+  purerlSupport =
+    builtins.fetchGit {
+      name = "purerl-support-packages";
+      url = "git@github.com:id3as/nixpkgs-purerl-support.git";
+      rev = "1bb777de71b0532c961de68a8ccd24709b93318d";
     };
 
   id3asPackages =
@@ -27,9 +34,9 @@ let
     };
 
   pls = nixpkgs.nodePackages.purescript-language-server.override {
-      version = "0.14.4";
+      version = "0.15.0";
       src = builtins.fetchurl {
-        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.14.4.tgz";
+        url = "https://registry.npmjs.org/purescript-language-server/-/purescript-language-server-0.15.0.tgz";
       };
     };
 
@@ -37,6 +44,7 @@ let
     import <nixpkgs> {
       overlays = [
         (import purerlReleases)
+        (import purerlSupport)
         (import erlangReleases)
         (import id3asPackages)
       ];
@@ -83,7 +91,12 @@ in
     erlangChannel.rebar3
     erlangChannel.erlang-ls
 
-    nixpkgs.id3as.purescript-0-13-8
+    nixpkgs.purerl-support.purescript-0-14-0
+    nixpkgs.purerl-support.spago-0-16-0
+    nixpkgs.purerl-support.dhall-json-1-5-0
+    nixpkgs.purerl-support.purty-7-0-0
+    nixpkgs.purerl-support.psa-0-8-2
+    nixpkgs.purerl.purerl-0-0-8
     pls
 
     # inetutils

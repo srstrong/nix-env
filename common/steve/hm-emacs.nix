@@ -4,7 +4,7 @@ let
     builtins.fetchGit {
       url = "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      rev = "6f1b47652747b10b6e7e42377baf2bafb95cc854";
+      rev = "360f24a1de8fcc3ea31c89d64b5ab6269037064a";
     };
 
   nixpkgs =
@@ -21,12 +21,15 @@ in
   programs.emacs = {
     enable = true;
     package = (nixpkgs.emacsWithPackagesFromUsePackage {
-             config = ./files/emacs.el;
-             package = nixpkgs.emacsGit-nox;
+             config = "";
+             package = nixpkgs.emacsGcc;
              alwaysEnsure = true;
              });
   };
 
-  home.file.".emacs.d/init.el".source = ./files/emacs.el;
-  home.file.".emacs.d/site-lisp/flycheck-rebar3/flycheck-rebar3.el".source = ./files/flycheck-rebar3.el;
+  home.file.".doom.d" = {
+    source = ./files/doom;
+    recursive = true;
+    onChange = builtins.readFile ./files/doom/bin/reload;
+  };
 }
