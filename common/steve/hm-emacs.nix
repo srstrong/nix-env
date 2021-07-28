@@ -4,7 +4,6 @@ let
     builtins.fetchGit {
       url = "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      #rev = "b539c9174b79abaa2c24bd773c855b170cfa6951";
       rev = "0fce209cb26c7f56090406058065081a3cddc76a";
     };
 
@@ -15,7 +14,7 @@ let
       ];
     };
 
-  foo = nixpkgs.emacsGit.override { nativeComp = true; };
+  emacsNative = nixpkgs.emacsGit.override { nativeComp = true; };
 in
 
 { pkgs, ... }:
@@ -25,8 +24,7 @@ in
     enable = true;
     package = (nixpkgs.emacsWithPackagesFromUsePackage {
              config = "";
-             package = foo;
-             #package = nixpkgs.emacsGcc;
+             package = emacsNative;
              alwaysEnsure = true;
              });
   };
