@@ -149,7 +149,7 @@
 )
 
 (setq tab-always-indent t)
-(setq confirm-nonexistent-file-or-buffer 1)
+(setq confirm-nonexistent-file-or-buffer t)
 (setq ivy-magic-tilde nil)
 
 (custom-set-faces

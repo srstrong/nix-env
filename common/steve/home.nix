@@ -1,7 +1,7 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-  inherit (pkgs.stdenv.lib) optionals;
+  inherit (pkgs.stdenv);
 
   #erlangReleases = builtins.fetchTarball https://github.com/nixerl/nixpkgs-nixerl/archive/v1.0.18-devel.tar.gz;
 
@@ -87,9 +87,9 @@ in
     gcc10
     ccls # C language server
 
-    erlangChannel.erlang
-    erlangChannel.rebar3
-    erlangChannel.erlang-ls
+    #erlangChannel.erlang
+    #erlangChannel.rebar3
+    #erlangChannel.erlang-ls
 
     nixpkgs.purerl-support.purescript-0-14-0
     nixpkgs.purerl-support.spago-0-16-0
@@ -100,10 +100,10 @@ in
     pls
 
     # inetutils
-  ] ++ optionals stdenv.isLinux [
+  ] ++ lib.optionals stdenv.isLinux [
                  glibcLocales
        ]
-    ++ optionals stdenv.isDarwin [
+    ++ lib.optionals stdenv.isDarwin [
                  darwin.apple_sdk.frameworks.Security
                  darwin.apple_sdk.frameworks.Carbon
                  darwin.apple_sdk.frameworks.Cocoa
