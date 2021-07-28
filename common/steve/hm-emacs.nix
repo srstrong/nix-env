@@ -4,7 +4,7 @@ let
     builtins.fetchGit {
       url = "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      rev = "360f24a1de8fcc3ea31c89d64b5ab6269037064a";
+      rev = "054abca26f9cf416701c880792b564019d528566";
     };
 
   nixpkgs =
@@ -22,7 +22,8 @@ in
     enable = true;
     package = (nixpkgs.emacsWithPackagesFromUsePackage {
              config = "";
-             package = nixpkgs.emacsGcc;
+             #package = nixpkgs.emacsGcc;
+             package = nixpkgs.emacsUnstable;
              alwaysEnsure = true;
              });
   };

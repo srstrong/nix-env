@@ -54,7 +54,17 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 ;;
-(after! psc-ide-mode
+(use-package! company-quickhelp
+   :hook (global-company-mode . company-quickhelp-mode)
+   :after company
+   :init (setq company-quickhelp-delay company-idle-delay))
+
+(add-hook 'lsp-mode-hook
+          (lambda ()
+            (setq-local company-format-margin-function
+                        #'company-vscode-light-icons-margin)))
+
+(after! psc-ide
   (psc-ide-mode -1))
 
 (use-package! lsp-mode
@@ -75,7 +85,7 @@
          ;;lsp-modeline-code-actions-segments '(count icon)
          lsp-modeline-diagnostics-mode 1
          lsp-enable-xref t
-         lsp-log-io nil ;; t
+         lsp-log-io nil
          lsp-diagnostic-clean-after-change nil
          lsp-keymap-prefix "C-c l"
          ;; lsp-purescript-server-args '("--stdio" "--log" "/tmp/pls.log")'
@@ -100,6 +110,12 @@
         lsp-ui-imenu-window-width 40
   )
 )
+
+(after! lsp-ui
+  (setq lsp-ui-doc-enable t))
+
+(after! rustic
+  (setq rustic-format-on-save t))
 
 (use-package! flycheck
   :config
