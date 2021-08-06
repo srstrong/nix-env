@@ -54,18 +54,22 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 ;;
-(use-package! company-quickhelp
-   :hook (global-company-mode . company-quickhelp-mode)
-   :after company
-   :init (setq company-quickhelp-delay company-idle-delay))
+;; (use-package! company-quickhelp
+;;    :hook (global-company-mode . company-quickhelp-mode)
+;;    :after company
+;;    :init (setq company-quickhelp-delay company-idle-delay))
+
+;; (add-hook 'psc-ide-mode-hook
+;;           (lambda ()
+;;             (when (psc-ide-mode) (psc-ide-mode -1))
+;;             )
+;;           )
 
 (add-hook 'lsp-mode-hook
           (lambda ()
+            (psc-ide-mode -1)
             (setq-local company-format-margin-function
                         #'company-vscode-light-icons-margin)))
-
-(after! psc-ide
-  (psc-ide-mode -1))
 
 (use-package! lsp-mode
    :hook (
@@ -106,16 +110,20 @@
         lsp-ui-sideline-show-code-actions nil
         lsp-ui-doc-delay 2
         lsp-ui-doc-max-height 50
-        ;; lsp-ui-doc-enable nil
+        ;;lsp-ui-doc-enable nil
         lsp-ui-imenu-window-width 40
   )
 )
+
+(setq +format-with-lsp nil)
 
 (after! lsp-ui
   (setq lsp-ui-doc-enable t))
 
 (after! rustic
   (setq rustic-format-on-save t))
+
+(after! psc-ide (remove-hook 'purescript-mode-hook 'psc-ide-mode ))
 
 (use-package! flycheck
   :config
