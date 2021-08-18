@@ -115,7 +115,9 @@
   )
 )
 
-(setq +format-with-lsp nil)
+(setq +format-with-lsp t)
+
+(setq-hook! 'erlang-mode-hook +format-with-lsp nil)
 
 (after! lsp-ui
   (setq lsp-ui-doc-enable t))

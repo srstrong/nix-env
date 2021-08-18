@@ -1,9 +1,9 @@
-{ config, pkgs, ... }:
+args@{ config, pkgs, ... }:
 
 {
   imports =
     [ # Common things
-      ./../../common
+      (import ./../../common (args // { hostOs = "darwin"; } ))
 
       # mbp user specific stuff
       ./steve
