@@ -20,6 +20,7 @@ in
     rsync
 
     # Development
+    influxdb
     autoconf
     ncurses6
     gitAndTools.tig

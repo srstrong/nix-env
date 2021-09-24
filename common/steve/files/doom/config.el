@@ -84,6 +84,7 @@
       ("purescript.addPscPackageSources" t)
       ("purescript.addSpagoSources" t)
       ("purescript.censorWarnings" ["ShadowedName"])
+      ("purescript.formatter" "pose")
       ))
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
          ;;lsp-modeline-code-actions-segments '(count icon)
