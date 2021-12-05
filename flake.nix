@@ -26,9 +26,12 @@
       domain = "gables.lan";
 
       commonDarwinConfig = [
-        #./modules/macintosh.nix
+        ./modules/mac.nix
         #./modules/mbsync.nix
-        home.darwinModules.home-manager
+        home.darwinModules.home-manager {
+          useGlobalPkgs = true;
+          useUserPackages = true;
+        }
 
         {
           nixpkgs.overlays = with inputs; [
@@ -65,7 +68,6 @@
               #      maxJobs = 16;
               #    }
               #  );
-
               home-manager.users.steve = {
                 home.packages = [
                   #deploy-rs.defaultPackage.x86_64-darwin
@@ -76,7 +78,7 @@
                 #Xcode = 497799835;
               };
 
-              homebrew.brews = [ "ios-deploy" ];
+              #homebrew.brews = [ "ios-deploy" ];
             }
           )
         ];
@@ -218,29 +220,29 @@
 #          ];
 #        };
 #
-      # Map each system in 'nixosConfigurations' to a common
-      # deployment description
-      deploy.nodes = (
-        builtins.mapAttrs
-          (
-            hostname: attr: {
-              inherit hostname;
-              fastConnection = true;
-              profiles = {
-                system = {
-                  sshUser = "admin";
-                  user = "root";
-                  path = deploy-rs.lib."${attr.config.nixpkgs.system}".activate.nixos
-                    self.nixosConfigurations."${hostname}";
-                };
-              };
-            }
-          )
-          self.nixosConfigurations
-      );
-
-      checks = builtins.mapAttrs
-        (system: deployLib: deployLib.deployChecks self.deploy)
-        deploy-rs.lib;
+#      # Map each system in 'nixosConfigurations' to a common
+#      # deployment description
+#      deploy.nodes = (
+#        builtins.mapAttrs
+#          (
+#            hostname: attr: {
+#              inherit hostname;
+#              fastConnection = true;
+#              profiles = {
+#                system = {
+#                  sshUser = "admin";
+#                  user = "root";
+#                  path = deploy-rs.lib."${attr.config.nixpkgs.system}".activate.nixos
+#                    self.nixosConfigurations."${hostname}";
+#                };
+#              };
+#            }
+#          )
+#          self.nixosConfigurations
+#      );
+#
+#      checks = builtins.mapAttrs
+#        (system: deployLib: deployLib.deployChecks self.deploy)
+#        deploy-rs.lib;
     };
 }
