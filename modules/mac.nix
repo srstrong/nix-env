@@ -23,23 +23,6 @@ in
 
   nix.trustedUsers = [ "root" "steve" ];
 
-#  nix.binaryCaches = [
-#    # Personal cache
-#    "https://cachix.org/api/v1/cache/cmacrae"
-#    # Nightly Emacs build cache for github.com/cmacrae/emacs
-#    "https://cachix.org/api/v1/cache/emacs"
-#
-#    "https://cachix.org/api/v1/cache/nix-community"
-#  ];
-#
-#  nix.binaryCachePublicKeys = [
-#    "cmacrae.cachix.org-1:5Mp1lhT/6baI3eAqnEvruhLrrXE9CKe27SbnXqjwXfg="
-#    "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
-#    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-#  ];
-#
-#  nix.trustedBinaryCaches = config.nix.binaryCaches;
-
   nixpkgs.config.allowUnfree = true;
 
   environment.shells = [ pkgs.zsh ];
@@ -78,7 +61,7 @@ in
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [
     emacs-all-the-icons-fonts
-    etBook
+  #  etBook
     fira-code
     font-awesome
     nerdfonts
@@ -99,6 +82,7 @@ in
   homebrew.cleanup = "zap";
   homebrew.global.brewfile = true;
   homebrew.global.noLock = true;
+  homebrew.brewPrefix = "/opt/homebrew/bin"; # M1 - parameterise
   homebrew.extraConfig = ''
     cask "firefox", args: { language: "en-GB" }
   '';
@@ -110,16 +94,16 @@ in
   ];
 
   homebrew.casks = [
-    "firefox"
-    "discord"
-    "spotify"
-    "yubico-yubikey-manager"
-    "yubico-yubikey-personalization-gui"
+#    "firefox"
+#    "discord"
+#    "spotify"
+#    "yubico-yubikey-manager"
+#    "yubico-yubikey-personalization-gui"
   ];
 
   homebrew.masApps = {
-    WireGuard = 1451685025;
-    YubicoAuthenticator = 1497506650;
+#    WireGuard = 1451685025;
+#    YubicoAuthenticator = 1497506650;
   };
 
 #  services.skhd.enable = true;
@@ -211,68 +195,37 @@ in
   # Recreate /run/current-system symlink after boot
   services.activate-system.enable = true;
 
-#  services.mbsync.enable = true;
-#  services.mbsync.postExec = ''
-#    if pgrep -f 'mu server'; then
-#        ${config.home-manager.users.cmacrae.programs.emacs.package}/bin/emacsclient \
-#          -e '(mu4e-update-index)'
-#    else
-#        ${pkgs.mu}/bin/mu index --nocolor
-#    fi
-#  '';
-#  launchd.user.agents.mbsync.serviceConfig.StandardErrorPath = "/tmp/mbsync.log";
-#  launchd.user.agents.mbsync.serviceConfig.StandardOutPath = "/tmp/mbsync.log";
-
   home-manager.users.steve = {
     home.stateVersion = "21.05";
     home.packages = with pkgs; [
-#      aspell
-#      aspellDicts.en
-#      aspellDicts.en-computers
+      ag
+      aspell
+      aspellDicts.en
+      aspellDicts.en-computers
+      autoconf
       bc
-      bind
       clang
-      consul
-      ffmpeg-full
+      coreutils
+      (ffmpeg-full.override {game-music-emu = null;})
+      git-lfs
       gnumake
       gnupg
       gnused
       htop
-#      hugo
+      iftop
+      influxdb
       ipcalc
       jq
-#      mpv
+      ncurses6
       nix-prefetch-git
       nmap
-#      nomad
-#      open-policy-agent
-#      pass
       python3
-      pwgen
-      ranger
       ripgrep
-#      rnix-lsp
       rsync
-      terraform
-      terraform-ls
-      unzip
       up
-#      vim
+      websocat
       wget
-#      wireguard-tools
       youtube-dl
-
-      # Go
-#      go
-#      gocode
-#      godef
-#      gotools
-#      golangci-lint
-#      golint
-#      go2nix
-#      errcheck
-#      gotags
-#      gopls
 
       # Docker
 #      docker
@@ -297,105 +250,72 @@ in
       enable = true;
       userName = fullName;
       userEmail = primaryEmail;
-#      signing.key = "54A14F5D";
-      signing.signByDefault = true;
       extraConfig.github.user = "srstrong";
     };
 
-    #########
-    # Email #
-    #########
-#    programs.mu.enable = true;
-#    programs.mbsync.enable = true;
-#    programs.msmtp.enable = true;
-#    accounts.email.maildirBasePath = "${config.users.users.cmacrae.home}/.mail";
-#    accounts.email.accounts.fastmail = {
-#      mu.enable = true;
-#      msmtp.enable = true;
-#      primary = pkgs.lib.mkDefault true;
-#      address = primaryEmail;
-#      aliases = [ secondaryEmail ];
-#      userName = primaryEmail;
-#      realName = fullName;
-#
-#      mbsync = {
-#        enable = true;
-#        create = "both";
-#        expunge = "both";
-#        remove = "both";
-#      };
-#
-#      imap.host = "imap.fastmail.com";
-#      smtp.host = "smtp.fastmail.com";
-#      smtp.port = 465;
-#
-#      passwordCommand = "${pkgs.writeShellScript "fastmail-mbsyncPass" ''
-#        ${pkgs.pass}/bin/pass Tech/fastmail.com | ${pkgs.gawk}/bin/awk -F: '/mbsync/{gsub(/ /,""); print$NF}'
-#      ''}";
-#    };
 
     ###########
     # Firefox #
     ###########
-    programs.firefox.enable = true;
-    # Handled by the Homebrew module
-    # This populates a dummy package to satsify the requirement
-    programs.firefox.package = pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
-    programs.firefox.extensions =
-      with pkgs.nur.repos.rycee.firefox-addons; [
-        ublock-origin
-        browserpass
-        vimium
-      ];
-
-    programs.firefox.profiles =
-      let
-        userChrome = builtins.readFile ../conf.d/userChrome.css;
-        settings = {
-          "app.update.auto" = false;
-          "browser.startup.homepage" = "https://lobste.rs";
-          "browser.search.region" = "GB";
-          "browser.search.countryCode" = "GB";
-          "browser.search.isUS" = false;
-          "browser.ctrlTab.recentlyUsedOrder" = false;
-          "browser.newtabpage.enabled" = false;
-          "browser.bookmarks.showMobileBookmarks" = true;
-          "browser.uidensity" = 1;
-          "browser.urlbar.placeholderName" = "DuckDuckGo";
-          "browser.urlbar.update1" = true;
-          "distribution.searchplugins.defaultLocale" = "en-GB";
-          "general.useragent.locale" = "en-GB";
-          "identity.fxaccounts.account.device.name" = config.networking.hostName;
-          "privacy.trackingprotection.enabled" = true;
-          "privacy.trackingprotection.socialtracking.enabled" = true;
-          "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
-          "reader.color_scheme" = "sepia";
-          "services.sync.declinedEngines" = "addons,passwords,prefs";
-          "services.sync.engine.addons" = false;
-          "services.sync.engineStatusChanged.addons" = true;
-          "services.sync.engine.passwords" = false;
-          "services.sync.engine.prefs" = false;
-          "services.sync.engineStatusChanged.prefs" = true;
-          "signon.rememberSignons" = false;
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        };
-      in
-      {
-        home = {
-          inherit settings;
-          inherit userChrome;
-          id = 0;
-        };
-
-        work = {
-          inherit userChrome;
-          id = 1;
-          settings = settings // {
-            "browser.startup.homepage" = "about:blank";
-            "browser.urlbar.placeholderName" = "Google";
-          };
-        };
-      };
+#    programs.firefox.enable = true;
+#    # Handled by the Homebrew module
+#    # This populates a dummy package to satsify the requirement
+#    programs.firefox.package = pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
+#    programs.firefox.extensions =
+#      with pkgs.nur.repos.rycee.firefox-addons; [
+#        ublock-origin
+#        browserpass
+#        vimium
+#      ];
+#
+#    programs.firefox.profiles =
+#      let
+#        #userChrome = builtins.readFile ../conf.d/userChrome.css;
+#        settings = {
+#          "app.update.auto" = false;
+#          "browser.startup.homepage" = "https://lobste.rs";
+#          "browser.search.region" = "GB";
+#          "browser.search.countryCode" = "GB";
+#          "browser.search.isUS" = false;
+#          "browser.ctrlTab.recentlyUsedOrder" = false;
+#          "browser.newtabpage.enabled" = false;
+#          "browser.bookmarks.showMobileBookmarks" = true;
+#          "browser.uidensity" = 1;
+#          "browser.urlbar.placeholderName" = "DuckDuckGo";
+#          "browser.urlbar.update1" = true;
+#          "distribution.searchplugins.defaultLocale" = "en-GB";
+#          "general.useragent.locale" = "en-GB";
+#          "identity.fxaccounts.account.device.name" = config.networking.hostName;
+#          "privacy.trackingprotection.enabled" = true;
+#          "privacy.trackingprotection.socialtracking.enabled" = true;
+#          "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
+#          "reader.color_scheme" = "sepia";
+#          "services.sync.declinedEngines" = "addons,passwords,prefs";
+#          "services.sync.engine.addons" = false;
+#          "services.sync.engineStatusChanged.addons" = true;
+#          "services.sync.engine.passwords" = false;
+#          "services.sync.engine.prefs" = false;
+#          "services.sync.engineStatusChanged.prefs" = true;
+#          "signon.rememberSignons" = false;
+#          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+#        };
+#      in
+#      {
+#        home = {
+#          inherit settings;
+#          #inherit userChrome;
+#          id = 0;
+#        };
+#
+#        work = {
+#          #inherit userChrome;
+#          id = 1;
+#          settings = settings // {
+#            "browser.startup.homepage" = "about:blank";
+#            "browser.urlbar.placeholderName" = "Google";
+#          };
+#        };
+#      };
 
     #########
     # Emacs #
@@ -424,14 +344,6 @@ in
 #    home.file.".emacs.d/emacs.org".source = ../conf.d/emacs.org;
 
     programs.emacs.package =
-      let
-        # TODO: derive 'name' from assignment
-        elPackage = name: src:
-          pkgs.runCommand "${name}.el" { } ''
-            mkdir -p  $out/share/emacs/site-lisp
-            cp -r ${src}/* $out/share/emacs/site-lisp/
-          '';
-      in
       (
         pkgs.emacsWithPackagesFromUsePackage {
           alwaysEnsure = true;
@@ -439,99 +351,89 @@ in
 
           # Custom overlay derived from 'emacs' flake input
           package = pkgs.emacs;
-          config = ../conf.d/emacs.org;
-
-#          override = epkgs: epkgs // {
-#            mu4e-dashboard = elPackage "mu4e-dashboard" (
-#              pkgs.fetchFromGitHub {
-#                owner = "rougier";
-#                repo = "mu4e-dashboard";
-#                rev = "40b2d48da55b7ac841d62737ea9cdf54e8442cf3";
-#                sha256 = "1i94gdyk9f5c2vyr184znr54cbvg6apcq38l2389m3h8lxg1m5na";
-#              }
-#            );
-#          };
-#
-#          extraEmacsPackages = epkgs: with epkgs; [
-#            mu4e-dashboard
-#          ];
-        }
+          config = "";
+	}
       );
+    home.file.".doom.d" = {
+      source = ../files/doom;
+      recursive = true;
+      onChange = builtins.readFile ../files/doom/bin/reload;
+    };
 
-    programs.fzf.enable = true;
-    programs.fzf.enableZshIntegration = true;
+#    programs.fzf.enable = true;
+#    programs.fzf.enableZshIntegration = true;
 
 #    programs.browserpass.enable = true;
 #    programs.browserpass.browsers = [ "firefox" ];
 
-    programs.alacritty = {
-      enable = true;
-      settings = {
-        window.padding.x = 24;
-        window.padding.y = 24;
-        window.decorations = "buttonless";
-        window.dynamic_title = true;
-        scrolling.history = 100000;
-        live_config_reload = true;
-        selection.save_to_clipboard = true;
-        mouse.hide_when_typing = true;
-        use_thin_strokes = true;
-
-        font = {
-          size = 12;
-          normal.family = "Roboto Mono";
-        };
-
-        colors = {
-          cursor.cursor = "#81a1c1";
-          primary.background = "#2e3440";
-          primary.foreground = "#d8dee9";
-
-          normal = {
-            black = "#3b4252";
-            red = "#bf616a";
-            green = "#a3be8c";
-            yellow = "#ebcb8b";
-            blue = "#81a1c1";
-            magenta = "#b48ead";
-            cyan = "#88c0d0";
-            white = "#e5e9f0";
-          };
-
-          bright = {
-            black = "#4c566a";
-            red = "#bf616a";
-            green = "#a3be8c";
-            yellow = "#ebcb8b";
-            blue = "#81a1c1";
-            magenta = "#b48ead";
-            cyan = "#8fbcbb";
-            white = "#eceff4";
-          };
-        };
-
-        key_bindings = [
-          { key = "V"; mods = "Command"; action = "Paste"; }
-          { key = "C"; mods = "Command"; action = "Copy"; }
-          { key = "Q"; mods = "Command"; action = "Quit"; }
-          { key = "Q"; mods = "Control"; chars = "\\x11"; }
-          { key = "F"; mods = "Alt"; chars = "\\x1bf"; }
-          { key = "B"; mods = "Alt"; chars = "\\x1bb"; }
-          { key = "D"; mods = "Alt"; chars = "\\x1bd"; }
-          { key = "Key3"; mods = "Alt"; chars = "#"; }
-          { key = "Slash"; mods = "Control"; chars = "\\x1f"; }
-          { key = "Period"; mods = "Alt"; chars = "\\e-\\e."; }
-          {
-            key = "N";
-            mods = "Command";
-            command = {
-              program = "open";
-              args = [ "-nb" "io.alacritty" ];
-            };
-          }
-        ];
-      };
-    };
+#    programs.alacritty = {
+#      enable = true;
+#      settings = {
+#        window.padding.x = 24;
+#        window.padding.y = 24;
+#        window.decorations = "buttonless";
+#        window.dynamic_title = true;
+#        scrolling.history = 100000;
+#        live_config_reload = true;
+#        selection.save_to_clipboard = true;
+#        mouse.hide_when_typing = true;
+#        use_thin_strokes = true;
+#
+#        font = {
+#          size = 12;
+#          normal.family = "Roboto Mono";
+#        };
+#
+#        colors = {
+#          cursor.cursor = "#81a1c1";
+#          primary.background = "#2e3440";
+#          primary.foreground = "#d8dee9";
+#
+#          normal = {
+#            black = "#3b4252";
+#            red = "#bf616a";
+#            green = "#a3be8c";
+#            yellow = "#ebcb8b";
+#            blue = "#81a1c1";
+#            magenta = "#b48ead";
+#            cyan = "#88c0d0";
+#            white = "#e5e9f0";
+#          };
+#
+#          bright = {
+#            black = "#4c566a";
+#            red = "#bf616a";
+#            green = "#a3be8c";
+#            yellow = "#ebcb8b";
+#            blue = "#81a1c1";
+#            magenta = "#b48ead";
+#            cyan = "#8fbcbb";
+#            white = "#eceff4";
+#          };
+#        };
+#
+#        key_bindings = [
+#          { key = "V"; mods = "Command"; action = "Paste"; }
+#          { key = "C"; mods = "Command"; action = "Copy"; }
+#          { key = "Q"; mods = "Command"; action = "Quit"; }
+#          { key = "Q"; mods = "Control"; chars = "\\x11"; }
+#          { key = "F"; mods = "Alt"; chars = "\\x1bf"; }
+#          { key = "B"; mods = "Alt"; chars = "\\x1bb"; }
+#          { key = "D"; mods = "Alt"; chars = "\\x1bd"; }
+#          { key = "Key3"; mods = "Alt"; chars = "#"; }
+#          { key = "Slash"; mods = "Control"; chars = "\\x1f"; }
+#          { key = "Period"; mods = "Alt"; chars = "\\e-\\e."; }
+#          {
+#            key = "N";
+#            mods = "Command";
+#            command = {
+#              program = "open";
+#              args = [ "-nb" "io.alacritty" ];
+#            };
+#          }
+#        ];
+#      };
+#    };
 
     programs.zsh = {
       enable = true;
@@ -561,16 +463,16 @@ in
             sha256 = "02pf87aiyglwwg7asm8mnbf9b2bcm82pyi1cj50yj74z4kwil6d1";
           };
         }
-        {
-          name = "fast-syntax-highlighting";
-          file = "fast-syntax-highlighting.plugin.zsh";
-          src = pkgs.fetchFromGitHub {
-            owner = "zdharma";
-            repo = "fast-syntax-highlighting";
-            rev = "v1.28";
-            sha256 = "106s7k9n7ssmgybh0kvdb8359f3rz60gfvxjxnxb4fg5gf1fs088";
-          };
-        }
+#        {
+#          name = "fast-syntax-highlighting";
+#          file = "fast-syntax-highlighting.plugin.zsh";
+#          src = pkgs.fetchFromGitHub {
+#            owner = "zdharma";
+#            repo = "fast-syntax-highlighting";
+#            rev = "v1.28";
+#            sha256 = "106s7k9n7ssmgybh0kvdb8359f3rz60gfvxjxnxb4fg5gf1fs088";
+#          };
+#        }
         {
           name = "z";
           file = "zsh-z.plugin.zsh";
@@ -692,7 +594,7 @@ in
 #          setw -g window-status-current-format "#[fg=blue,bg=default] #I #[fg=red,bg=default] #W "
 #
 #          run-shell ${tmuxYank}/yank.tmux
-        '';
+#        '';
       };
 
     # Global Emacs keybindings
@@ -745,5 +647,5 @@ in
 #          };
 #      }
 #    '';
-#  };
+  };
 }

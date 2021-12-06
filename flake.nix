@@ -6,7 +6,7 @@
     darwin.url = github:lnl7/nix-darwin;
     home.url = github:nix-community/home-manager;
     nur.url = github:nix-community/NUR;
-    emacs.url = github:cmacrae/emacs;
+    emacs.url = github:srstrong/emacs;
     emacs-overlay.url = github:nix-community/emacs-overlay;
     #rnix-lsp.url = github:nix-community/rnix-lsp;
     #deploy-rs.url = "github:serokell/deploy-rs";
@@ -27,10 +27,9 @@
 
       commonDarwinConfig = [
         ./modules/mac.nix
-        #./modules/mbsync.nix
         home.darwinModules.home-manager {
-          useGlobalPkgs = true;
-          useUserPackages = true;
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
         }
 
         {
@@ -56,18 +55,6 @@
 
               #services.spacebar.config.right_shell_command = mailIndicator "fastmail";
 
-              #nix.distributedBuilds = true;
-              #nix.buildMachines =
-              #  pkgs.lib.forEach (pkgs.lib.range 1 3) (
-              #    n:
-              #    {
-              #      hostName = "compute${builtins.toString n}";
-              #      sshUser = "root";
-              #      sshKey = "${config.users.users.cmacrae.home}/.ssh/id_rsa";
-              #      systems = [ "aarch64-linux" "x86_64-linux" ];
-              #      maxJobs = 16;
-              #    }
-              #  );
               home-manager.users.steve = {
                 home.packages = [
                   #deploy-rs.defaultPackage.x86_64-darwin
