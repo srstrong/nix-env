@@ -3,6 +3,8 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
+(general-auto-unbind-keys :off)
+(remove-hook 'doom-after-init-modules-hook #'general-auto-unbind-keys)
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -64,14 +66,17 @@
 ;;             (when (psc-ide-mode) (psc-ide-mode -1))
 ;;             )
 ;;           )
-(general-auto-unbind-keys :off)
-(remove-hook 'doom-after-init-modules-hook #'general-auto-unbind-keys)
 
 (add-hook 'lsp-mode-hook
           (lambda ()
             (psc-ide-mode -1)
             (setq-local company-format-margin-function
                         #'company-vscode-light-icons-margin)))
+
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration
+    '(".*\\.purs$" . "purescript"))
+  )
 
 (use-package! lsp-mode
    :hook (
@@ -144,7 +149,8 @@
   (let ((deactivate-mark t))
     (call-process-region (point) (mark) "pbcopy")))
 
-(map! "C-s" #'+default/search-buffer
+(map! "C-s" #'counsel-grep-or-swiper ;; #'+default/search-buffer
+      "C-r" #'counsel-grep-or-swiper-backward
       "M-W" #'pbcopy
       )
 
@@ -161,9 +167,21 @@
       "RET" #'ivy-alt-done
 )
 
+(map! :map company-mode-map
+      "C-x c" #'company-complete
+)
+
 (setq tab-always-indent t)
 (setq confirm-nonexistent-file-or-buffer t)
 (setq ivy-magic-tilde nil)
+(setq doom-font-increment 1)
+
+(setq mac-command-modifier      'super
+      ns-command-modifier       'super
+      mac-option-modifier       'meta
+      ns-option-modifier        'meta
+      mac-right-option-modifier 'meta
+      ns-right-option-modifier  'meta)
 
 (custom-set-faces
  '(mode-line ((t (:background "light slate gray" :foreground "black"))))

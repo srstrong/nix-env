@@ -24,6 +24,7 @@ in
   nix.trustedUsers = [ "root" "steve" ];
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnsupportedSystem = true;
 
   environment.shells = [ pkgs.zsh ];
   environment.systemPackages = [ pkgs.zsh pkgs.gcc ];
@@ -195,7 +196,13 @@ in
   services.activate-system.enable = true;
 
   home-manager.users.steve = {
+
     home.stateVersion = "21.05";
+
+    home.file.".config/nixpkgs/config.nix" = {
+      source = ../files/config/nixpkgs/config.nix;
+    };
+
     home.packages = with pkgs; [
       ag
       aspell
