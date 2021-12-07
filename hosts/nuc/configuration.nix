@@ -91,6 +91,54 @@ args@{ config, pkgs, ... }:
     vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
   };
 
+  services.grafana = {
+    enable   = true;
+    port     = 8000;
+    addr     = "192.168.1.93";
+    domain   = "nuc";
+    protocol = "http";
+    dataDir  = "/var/lib/grafana";
+  };
+
+  services.influxdb = {
+    enable   = true;
+  };
+
+  services.telegraf = {
+    enable   = true;
+    extraConfig = {
+      agent    = {
+        hostname = "nuc.gables.lan";
+      };
+      inputs = {
+        cpu = { percpu = true; totalcpu = true; };
+        disk = { ignore_fs = ["tmpfs" "devtmpfs"]; };
+        diskio = {};
+        kernel = {};
+        linux_sysctl_fs = {};
+        mem = {};
+        processes = { };
+        swap = {};
+        system = {};
+        net = { interfaces = [ "enp5s0" ]; };
+        netstat = {};
+        interrupts = {};
+        conntrack = { files = ["ip_conntrack_count" "ip_conntrack_max" "nf_conntrack_count" "nf_conntrack_max"];
+                      dirs = ["/proc/sys/net/ipv4/netfilter" "/proc/sys/net/netfilter"];
+                    };
+        internal = {};
+        procstat = { exe = "beam"; };
+      };
+      outputs = {
+         influxdb = { database = "telegraf_metrics"; urls = [ "http://localhost:8086" ]; };
+      };
+    };
+  };
+
+  services.kapacitor = {
+    enable   = true;
+  };
+
   # VAAPI
   #   # https://nixos.wiki/wiki/Accelerated_Video_Playback
   hardware.opengl = {
@@ -108,6 +156,9 @@ args@{ config, pkgs, ... }:
   environment.systemPackages = with pkgs; [
     git
     libva-utils
+    grafana
+    telegraf
+    kapacitor
   ];
 
 }
