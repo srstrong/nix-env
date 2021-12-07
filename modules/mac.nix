@@ -61,7 +61,6 @@ in
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [
     emacs-all-the-icons-fonts
-  #  etBook
     fira-code
     font-awesome
     nerdfonts
@@ -253,6 +252,10 @@ in
       extraConfig.github.user = "srstrong";
     };
 
+    programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
 
     ###########
     # Firefox #
@@ -313,7 +316,7 @@ in
 #          settings = settings // {
 #            "browser.startup.homepage" = "about:blank";
 #            "browser.urlbar.placeholderName" = "Google";
-#          };
+#
 #        };
 #      };
 
@@ -321,28 +324,6 @@ in
     # Emacs #
     #########
     programs.emacs.enable = true;
-#    home.file.".emacs.d/init.el".text = ''
-#      ;;; init.el --- Where all the magic begins
-#      ;;
-#      ;;; Commentary:
-#      ;; This file loads Org-mode and then loads the rest of the Emacs initialization from Emacs Lisp
-#      ;; embedded in the literate Org-mode file: emacs.org
-#      ;;
-#      ;;; Code:
-#
-#      (setq emacs-dir (file-name-directory (or (buffer-file-name) load-file-name)))
-#
-#      ;; load up Org-mode and Org-babel
-#      (require 'org-install)
-#      (require 'ob-tangle)
-#
-#      ;; load up all literate org-mode files in this directory
-#      (mapc #'org-babel-load-file (directory-files emacs-dir t "\\.org$"))
-#
-#      ;;; init.el ends here
-#    '';
-#    home.file.".emacs.d/emacs.org".source = ../conf.d/emacs.org;
-
     programs.emacs.package =
       (
         pkgs.emacsWithPackagesFromUsePackage {
@@ -352,7 +333,7 @@ in
           # Custom overlay derived from 'emacs' flake input
           package = pkgs.emacs;
           config = "";
-	}
+	      }
       );
     home.file.".doom.d" = {
       source = ../files/doom;
@@ -362,9 +343,6 @@ in
 
 #    programs.fzf.enable = true;
 #    programs.fzf.enableZshIntegration = true;
-
-#    programs.browserpass.enable = true;
-#    programs.browserpass.browsers = [ "firefox" ];
 
 #    programs.alacritty = {
 #      enable = true;

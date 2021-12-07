@@ -64,6 +64,8 @@
 ;;             (when (psc-ide-mode) (psc-ide-mode -1))
 ;;             )
 ;;           )
+(general-auto-unbind-keys :off)
+(remove-hook 'doom-after-init-modules-hook #'general-auto-unbind-keys)
 
 (add-hook 'lsp-mode-hook
           (lambda ()
