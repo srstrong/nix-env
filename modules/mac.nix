@@ -199,9 +199,11 @@ in
 
     home.stateVersion = "21.05";
 
-    home.file.".config/nixpkgs/config.nix" = {
-      source = ../files/config/nixpkgs/config.nix;
-    };
+    # home.file.".config/nixpkgs/config.nix".text = ''
+    #   { ... }:
+
+    #   { allowUnsupportedSystem = true; }
+    # '';
 
     home.packages = with pkgs; [
       ag
@@ -222,6 +224,7 @@ in
       influxdb
       ipcalc
       jq
+      kitty
       ncurses6
       nix-prefetch-git
       nmap
@@ -263,6 +266,29 @@ in
       enable = true;
       nix-direnv.enable = true;
     };
+
+    home.file = {
+      ".config/kitty/kitty.conf".source = ../files/kitty.conf;
+      ".alacritty.yml".source = ../files/alacritty.yml;
+      ".ssh/config".source = ../files/ssh_config;
+      ".config/nixpkgs/config.nix".text = ''
+        { ... }:
+
+        { allowUnsupportedSystem = true; }
+      '';
+      ".doom.d" = {
+        source = ../files/doom;
+        recursive = true;
+        onChange = builtins.readFile ../files/doom/bin/reload;
+      };
+    };
+    # //
+    # (if hostOs == "darwin" then {
+    #   "Library/Application\ Support/erlang_ls".source = ./files/erlang-ls-config.yaml;
+    # }
+    #  else {
+    #    ".erlang_ls".source = ./files/erlang-ls-config.yaml;
+    #  });
 
     ###########
     # Firefox #
@@ -342,11 +368,11 @@ in
           config = "";
 	      }
       );
-    home.file.".doom.d" = {
-      source = ../files/doom;
-      recursive = true;
-      onChange = builtins.readFile ../files/doom/bin/reload;
-    };
+    # home.file.".doom.d" = {
+    #   source = ../files/doom;
+    #   recursive = true;
+    #   onChange = builtins.readFile ../files/doom/bin/reload;
+    # };
 
 #    programs.fzf.enable = true;
 #    programs.fzf.enableZshIntegration = true;

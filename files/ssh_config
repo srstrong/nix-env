@@ -1,0 +1,25 @@
+Host nuc2
+     HostName nuc2
+     User id3as
+     CheckHostIP no
+
+Host nuc2-zt
+     HostName nuc2-zt
+     User id3as
+     CheckHostIP no
+
+Host test1
+     HostName test1
+     User id3as
+     CheckHostIP no
+
+Host test1-zt
+     HostName test1-zt
+     User id3as
+     CheckHostIP no
+
+Host jumpbox
+     HostName 52.56.170.12
+
+Host usjumpbox
+     HostName 13.58.129.72
