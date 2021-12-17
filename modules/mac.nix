@@ -56,7 +56,9 @@ in
       TrackpadThreeFingerDrag = true;
     };
 
-    NSGlobalDomain._HIHideMenuBar = true;
+    NSGlobalDomain._HIHideMenuBar = false;
+    NSGlobalDomain.NSWindowResizeTime = "0.1";
+
   };
 
   fonts.enableFontDir = true;
@@ -64,6 +66,7 @@ in
     emacs-all-the-icons-fonts
     fira-code
     font-awesome
+    inconsolata
     nerdfonts
     roboto
     roboto-mono
@@ -206,6 +209,7 @@ in
     # '';
 
     home.packages = with pkgs; [
+      alacritty
       ag
       aspell
       aspellDicts.en
@@ -224,7 +228,8 @@ in
       influxdb
       ipcalc
       jq
-      kitty
+      #kitty
+      lorri
       ncurses6
       nix-prefetch-git
       nmap
@@ -550,10 +555,15 @@ in
       in
       {
         enable = true;
+        terminal = "xterm-256color";
+        extraConfig = ''
+          set -g history-limit 16384
+          set -ga terminal-overrides ",xterm-256color:Tc"
+          set -g default-terminal "xterm-256color"
+         '';
 #        shortcut = "q";
 #        keyMode = "vi";
 #        clock24 = true;
-        terminal = "screen-256color";
 #        customPaneNavigationAndResize = true;
 #        secureSocket = false;
 #        extraConfig = ''
