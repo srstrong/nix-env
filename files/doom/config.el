@@ -183,6 +183,11 @@
       mac-right-option-modifier 'meta
       ns-right-option-modifier  'meta)
 
+(setq which-key-show-early-on-C-h t)
+(setq which-key-idle-delay 10000)
+(setq which-key-idle-secondary-delay 0.05)
+
 (custom-set-faces
  '(mode-line ((t (:background "light slate gray" :foreground "black"))))
  '(mode-line-inactive ((t (:background "dim gray")))))
+
