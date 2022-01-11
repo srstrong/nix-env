@@ -90,7 +90,7 @@
     '(("purescript.codegenTargets" ["corefn"])
       ("purescript.addPscPackageSources" t)
       ("purescript.addSpagoSources" t)
-      ("purescript.censorWarnings" ["ShadowedName"])
+      ("purescript.censorWarnings" ["ShadowedName" "WildcardInferredType"])
       ("purescript.formatter" "pose")
       ))
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.

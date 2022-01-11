@@ -215,10 +215,16 @@ in
       aspellDicts.en
       aspellDicts.en-computers
       autoconf
+      bat
       bc
       clang
       coreutils
+      diff-so-fancy
+      duf
+      fd
       (ffmpeg-full.override {game-music-emu = null;})
+      fx
+      fzf
       git-lfs
       gnumake
       gnupg
@@ -264,7 +270,38 @@ in
       enable = true;
       userName = fullName;
       userEmail = primaryEmail;
-      extraConfig.github.user = "srstrong";
+      extraConfig = {
+        github = {
+          user = "srstrong";
+        };
+        core = {
+          pager = "diff-so-fancy | less --tabs=4 -RFX";
+        };
+        interactive = {
+          diffFilter = "diff-so-fancy --patch";
+        };
+        color = {
+          ui = true;
+          diff-highlight = {
+            oldNormal = "red bold";
+            oldHighlight = "red bold 52";
+            newNormal = "green bold";
+            newHighlight = "green bold 22";
+          };
+          diff = {
+            meta = "11";
+            frag = "magenta bold";
+            func = "146 bold";
+            commit = "yellow bold";
+            old = "red bold";
+            new = "green bold";
+            whitespace = "red reverse";
+          };
+        };
+      };
+
+
+
     };
 
     programs.direnv = {
@@ -379,8 +416,8 @@ in
     #   onChange = builtins.readFile ../files/doom/bin/reload;
     # };
 
-#    programs.fzf.enable = true;
-#    programs.fzf.enableZshIntegration = true;
+    programs.fzf.enable = true;
+    programs.fzf.enableZshIntegration = true;
 
 #    programs.alacritty = {
 #      enable = true;
@@ -456,9 +493,14 @@ in
       enableAutosuggestions = true;
       enableCompletion = true;
       defaultKeymap = "emacs";
-      sessionVariables = { RPROMPT = ""; };
+      sessionVariables = {
+        RPROMPT = "";
+        FZF_DEFAULT_COMMAND = "fd --type f";
+      };
 
       shellAliases = {
+        cat = "bat";
+        diff = "diff -u | diff-so-fancy";
 #        k = "kubectl";
 #        kp = "kube-prompt";
 #        kc = "kubectx";
