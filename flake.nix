@@ -24,14 +24,12 @@
   outputs = { self, nixpkgs, darwin, home, ... }@inputs:
     let
       domain = "gables.lan";
-
       commonDarwinConfig = [
         ./modules/mac.nix
         home.darwinModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
         }
-
         {
           nixpkgs.overlays = with inputs; [
             nur.overlay
@@ -47,6 +45,9 @@
     in
     {
       darwinConfigurations.macbookM1 = darwin.lib.darwinSystem {
+         specialArgs = {
+           nix-env-config.os = "darwin";
+         };
         system = "aarch64-darwin";
         modules = commonDarwinConfig ++ [
           (

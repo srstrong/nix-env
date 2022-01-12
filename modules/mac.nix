@@ -1,9 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs, nix-env-config, ... }:
 
 let
   mailAddr = name: domain: "${name}@${domain}";
   primaryEmail = mailAddr "steve" "srstrong.com";
   fullName = "Steve Strong";
+
 
 in
 {
@@ -33,7 +34,7 @@ in
 
   time.timeZone = "Europe/London";
   users.users.steve.shell = pkgs.zsh;
-  users.users.steve.home = "/Users/cmacrae";
+  users.users.steve.home = "/Users/steve";
   users.nix.configureBuildUsers = true;
 
   system.defaults = {
@@ -97,16 +98,16 @@ in
   ];
 
   homebrew.casks = [
-#    "firefox"
-#    "discord"
-#    "spotify"
-#    "yubico-yubikey-manager"
-#    "yubico-yubikey-personalization-gui"
+    # "firefox"
+    # "discord"
+    # "spotify"
+    # "yubico-yubikey-manager"
+    # "yubico-yubikey-personalization-gui"
   ];
 
   homebrew.masApps = {
-#    WireGuard = 1451685025;
-#    YubicoAuthenticator = 1497506650;
+    # WireGuard = 1451685025;
+    # YubicoAuthenticator = 1497506650;
   };
 
 #  services.skhd.enable = true;
@@ -202,12 +203,6 @@ in
 
     home.stateVersion = "21.05";
 
-    # home.file.".config/nixpkgs/config.nix".text = ''
-    #   { ... }:
-
-    #   { allowUnsupportedSystem = true; }
-    # '';
-
     home.packages = with pkgs; [
       alacritty
       ag
@@ -248,22 +243,21 @@ in
       youtube-dl
 
       # Docker
-#      docker
+      # docker
 
       # k8s
-#      argocd
-#      kind
-#      kubectl
-#      kubectx
-#      kubeval
-#      kube-prompt
-#      kubernetes-helm
-#      kustomize
+      # argocd
+      # kind
+      # kubectl
+      # kubectx
+      # kubeval
+      # kube-prompt
+      # kubernetes-helm
+      # kustomize
     ];
 
     home.sessionVariables = {
       PAGER = "less -R";
-#      EDITOR = "emacsclient";
     };
 
     programs.git = {
@@ -299,9 +293,6 @@ in
           };
         };
       };
-
-
-
     };
 
     programs.direnv = {
@@ -309,12 +300,12 @@ in
       nix-direnv.enable = true;
     };
 
-    home.file = {
+    home.file = ({
       ".config/kitty/kitty.conf".source = ../files/kitty.conf;
       ".alacritty.yml".source = ../files/alacritty.yml;
       ".ssh/config".source = ../files/ssh_config;
       ".config/nixpkgs/config.nix".text = ''
-        { ... }:
+                                          { ... }:
 
         { allowUnsupportedSystem = true; }
       '';
@@ -323,14 +314,18 @@ in
         recursive = true;
         onChange = builtins.readFile ../files/doom/bin/reload;
       };
-    };
-    # //
-    # (if hostOs == "darwin" then {
-    #   "Library/Application\ Support/erlang_ls".source = ./files/erlang-ls-config.yaml;
-    # }
-    #  else {
-    #    ".erlang_ls".source = ./files/erlang-ls-config.yaml;
-    #  });
+      "Library/Application\ Support/erlang_ls".source = ../files/erlang-ls-config.yaml;
+    } //
+    (if nix-env-config.os == "darwin" then
+      {
+      "Library/Application\ Support/erlang_ls".source = ../files/erlang-ls-config.yaml;
+      }
+     else
+       {
+         ".erlang_ls".source = ../files/erlang-ls-config.yaml;
+       }
+    ));
+
 
     ###########
     # Firefox #
