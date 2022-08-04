@@ -139,6 +139,20 @@
         "type": "github"
       }
     },
+    "nixpkgs_3": {
+      "locked": {
+        "lastModified": 1659542688,
+        "narHash": "sha256-7Ye59iW/DUWb8PzptEqdyYPlv6y+IhqKecaoZl3q68A=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "81094ccd6a0aa13ed176c815a60c4e25b49f072d",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
     "nur": {
       "locked": {
         "lastModified": 1638732651,
@@ -154,6 +168,25 @@
         "type": "github"
       }
     },
+    "private": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1659624116,
+        "narHash": "sha256-lbBGxwjPQB7OUH0jEfej/pUyoW54kYkzzvpTGLaRxF0=",
+        "ref": "main",
+        "rev": "6e6883d0daaeb55483d751066b171893ec9c9f39",
+        "revCount": 6,
+        "type": "git",
+        "url": "ssh://git@github.com/srstrong/nix-env-priv"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "ssh://git@github.com/srstrong/nix-env-priv"
+      }
+    },
     "root": {
       "inputs": {
         "darwin": "darwin",
@@ -161,7 +194,8 @@
         "emacs-overlay": "emacs-overlay",
         "home": "home",
         "nixpkgs": "nixpkgs_2",
-        "nur": "nur"
+        "nur": "nur",
+        "private": "private"
       }
     }
   },

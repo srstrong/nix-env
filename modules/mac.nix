@@ -1,10 +1,11 @@
-{ config, pkgs, lib, inputs, nix-env-config, ... }:
+{ config, pkgs, lib, inputs, nix-env-config, private, ... }:
 
 let
   mailAddr = name: domain: "${name}@${domain}";
   primaryEmail = mailAddr "steve" "srstrong.com";
   fullName = "Steve Strong";
 
+#  foo = inputs.nix-env-priv.bar;
 in
 {
   nix.package = pkgs.nixFlakes;
@@ -196,7 +197,7 @@ in
 #  launchd.user.agents.spacebar.serviceConfig.StandardOutPath = "/tmp/spacebar.out.log";
 
   launchd.user.agents.nginx = {
-    command = "${pkgs.nginx}/bin/nginx -p /tmp -c ~/.nginx/config";
+    command = "${pkgs.nginx}/bin/nginx -e /tmp/nginx/error.log -p /tmp -c ~/.nginx/config";
     path = [pkgs.nginx];
     serviceConfig = {
       KeepAlive = true;
@@ -316,6 +317,8 @@ in
       ".alacritty.yml".source = ../files/alacritty.yml;
       ".ssh/config".source = ../files/ssh_config;
       ".nginx/config".source = ../files/nginx.config;
+      ".nginx/m1.gables.com.crt".source = private.m1-gables-com-crt;
+      ".nginx/m1.gables.com.key".source = private.m1-gables-com-key;
       ".config/nixpkgs/config.nix".text = ''
                                           { ... }:
 

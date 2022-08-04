@@ -6,6 +6,7 @@
     darwin.url = github:lnl7/nix-darwin;
     home.url = github:nix-community/home-manager;
     nur.url = github:nix-community/NUR;
+    private.url = git+ssh://git@github.com/srstrong/nix-env-priv?ref=main;
     emacs.url = github:srstrong/emacs;
     emacs-overlay.url = github:nix-community/emacs-overlay;
     #rnix-lsp.url = github:nix-community/rnix-lsp;
@@ -45,9 +46,10 @@
     in
     {
       darwinConfigurations.macbookM1 = darwin.lib.darwinSystem {
-         specialArgs = {
-           nix-env-config.os = "darwin";
-         };
+        specialArgs = {
+          nix-env-config.os = "darwin";
+          private = inputs.private;
+        };
         system = "aarch64-darwin";
         modules = commonDarwinConfig ++ [
           (
