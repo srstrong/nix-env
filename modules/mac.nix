@@ -5,7 +5,6 @@ let
   primaryEmail = mailAddr "steve" "srstrong.com";
   fullName = "Steve Strong";
 
-
 in
 {
   nix.package = pkgs.nixFlakes;
@@ -196,6 +195,14 @@ in
 #  launchd.user.agents.spacebar.serviceConfig.StandardErrorPath = "/tmp/spacebar.err.log";
 #  launchd.user.agents.spacebar.serviceConfig.StandardOutPath = "/tmp/spacebar.out.log";
 
+  launchd.user.agents.nginx = {
+    command = "${pkgs.nginx}/bin/nginx -p /tmp -c ~/.nginx/config";
+    path = [pkgs.nginx];
+    serviceConfig = {
+      KeepAlive = true;
+    };
+  };
+
   # Recreate /run/current-system symlink after boot
   services.activate-system.enable = true;
 
@@ -210,6 +217,7 @@ in
       aspellDicts.en
       aspellDicts.en-computers
       autoconf
+      #awscli2
       bat
       bc
       clang
@@ -221,6 +229,7 @@ in
       fx
       fzf
       git-lfs
+      git-filter-repo
       gnumake
       gnupg
       gnused
@@ -234,9 +243,11 @@ in
       ncurses6
       nix-prefetch-git
       nmap
+      nginx
       python3
       ripgrep
       rsync
+      ssm-session-manager-plugin
       up
       websocat
       wget
@@ -304,6 +315,7 @@ in
       ".config/kitty/kitty.conf".source = ../files/kitty.conf;
       ".alacritty.yml".source = ../files/alacritty.yml;
       ".ssh/config".source = ../files/ssh_config;
+      ".nginx/config".source = ../files/nginx.config;
       ".config/nixpkgs/config.nix".text = ''
                                           { ... }:
 

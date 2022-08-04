@@ -38,7 +38,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -92,15 +91,20 @@
       ("purescript.addSpagoSources" t)
       ("purescript.censorWarnings" ["ShadowedName" "WildcardInferredType"])
       ("purescript.formatter" "pose")
+      ("purescript.autocompleteLimit" 50)
       ))
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
          ;;lsp-modeline-code-actions-segments '(count icon)
+         lsp-lens-mode nil
+         lsp-lens-enable nil
+         lsp-modeline-code-actions-mode nil
+         lsp-modeline-code-actions-enable nil
          lsp-modeline-diagnostics-mode 1
          lsp-enable-xref t
-         lsp-log-io nil
+         lsp-log-io t
          lsp-diagnostic-clean-after-change nil
          lsp-keymap-prefix "C-c l"
-         ;; lsp-purescript-server-args '("--stdio" "--log" "/tmp/pls.log")'
+         lsp-purescript-server-args '("--stdio" "--log" "/tmp/pls.log")
          )
 )
 
@@ -171,10 +175,16 @@
       "C-x c" #'company-complete
 )
 
+(setq company-idle-delay 1)
+(setq lsp-use-plists t)
 (setq tab-always-indent t)
 (setq confirm-nonexistent-file-or-buffer t)
 (setq ivy-magic-tilde nil)
 (setq doom-font-increment 1)
+(setq flycheck-check-syntax-automatically '(save mode-enabled))
+(setq flycheck-display-errors-delay 100000)
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 4 (* 1024 1024)))
 
 (setq mac-command-modifier      'super
       ns-command-modifier       'super

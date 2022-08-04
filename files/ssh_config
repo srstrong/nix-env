@@ -23,3 +23,11 @@ Host jumpbox
 
 Host usjumpbox
      HostName 13.58.129.72
+
+Host stagingBuild
+    User ssm-user
+    ProxyCommand sh -c "aws ssm start-session --profile 628351451087_id3as --region eu-west-1 --target i-07dde371a04b76dd5 --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+
+#Host i-* mi-*
+#    User ssm-user
+#    ProxyCommand sh -c "aws ssm start-session --profile 302824998957_development --region $REGION --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
