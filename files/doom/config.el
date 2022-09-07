@@ -90,7 +90,7 @@
       ("purescript.addPscPackageSources" t)
       ("purescript.addSpagoSources" t)
       ("purescript.censorWarnings" ["ShadowedName" "WildcardInferredType"])
-      ("purescript.formatter" "pose")
+      ("purescript.formatter" "purs-tidy")
       ("purescript.autocompleteLimit" 50)
       ))
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
