@@ -1,28 +1,27 @@
-{ config, pkgs, lib, inputs, nix-env-config, private, ... }:
+{ config, pkgs, inputs, nix-env-config, private, ... }:
 
 let
   mailAddr = name: domain: "${name}@${domain}";
   primaryEmail = mailAddr "steve" "srstrong.com";
   fullName = "Steve Strong";
 
-#  foo = inputs.nix-env-priv.bar;
 in
 {
-  nix.package = pkgs.nixFlakes;
+  nix.package = pkgs.nixVersions.stable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
 
   system.stateVersion = 4;
-  nix.maxJobs = "auto";
-  nix.buildCores = 0;
+  nix.settings.max-jobs = "auto";
+  nix.settings.cores = 0;
   services.nix-daemon.enable = true;
 
   nixpkgs.overlays = [
     (import ../overlays)
   ];
 
-  nix.trustedUsers = [ "root" "steve" ];
+  nix.settings.trusted-users = [ "root" "steve" ];
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnsupportedSystem = true;
@@ -36,7 +35,7 @@ in
   time.timeZone = "Europe/London";
   users.users.steve.shell = pkgs.zsh;
   users.users.steve.home = "/Users/steve";
-  users.nix.configureBuildUsers = true;
+  nix.configureBuildUsers = true;
 
   system.defaults = {
     dock = {
@@ -59,11 +58,11 @@ in
     };
 
     NSGlobalDomain._HIHideMenuBar = false;
-    NSGlobalDomain.NSWindowResizeTime = "0.1";
+    NSGlobalDomain.NSWindowResizeTime = 0.1;
 
   };
 
-  fonts.enableFontDir = true;
+  fonts.fontDir.enable = true;
   fonts.fonts = with pkgs; [
     emacs-all-the-icons-fonts
     fira-code
@@ -83,10 +82,11 @@ in
   # Homebrew #
   ############
   homebrew.enable = true;
-  homebrew.autoUpdate = true;
-  homebrew.cleanup = "zap";
+  homebrew.onActivation.autoUpdate = true;
+  homebrew.onActivation.upgrade = true;
+  homebrew.onActivation.cleanup = "zap";
   homebrew.global.brewfile = true;
-  homebrew.global.noLock = true;
+  homebrew.global.lockfiles = true;
   homebrew.brewPrefix = "/opt/homebrew/bin"; # M1 - parameterise
   homebrew.extraConfig = ''
     cask "firefox", args: { language: "en-GB" }
@@ -215,11 +215,33 @@ in
 
   home-manager.users.steve = {
 
-    home.stateVersion = "21.05";
+  # home.activation = {
+  #     # This should be removed once
+  #     # https://github.com/nix-community/home-manager/issues/1341 is closed.
+  #     aliasApplications = inputs.home.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  #       app_folder="$(echo ~/Applications)/Home Manager Apps"
+  #       home_manager_app_folder="$genProfilePath/home-path/Applications"
+  #       $DRY_RUN_CMD rm -rf "$app_folder"
+  #       # NB: aliasing ".../home-path/Applications" to "~/Applications/Home Manager Apps" doesn't
+  #       #     work (presumably because the individual apps are symlinked in that directory, not
+  #       #     aliased). So this makes "Home Manager Apps" a normal directory and then aliases each
+  #       #     application into there directly from its location in the nix store.
+  #       $DRY_RUN_CMD mkdir "$app_folder"
+  #       for app in $(find "$newGenPath/home-path/Applications" -type l -exec readlink -f {} \;)
+  #       do
+  #         $DRY_RUN_CMD osascript \
+  #           -e "tell app \"Finder\"" \
+  #           -e "make new alias file at POSIX file \"$app_folder\" to POSIX file \"$app\"" \
+  #           -e "set name of result to \"$(basename $app)\"" \
+  #           -e "end tell"
+  #       done
+  #     '';
+  #   };
+
+    home.stateVersion = "22.05";
 
     home.packages = with pkgs; [
       alacritty
-      ag
       aspell
       aspellDicts.en
       aspellDicts.en-computers
@@ -245,7 +267,7 @@ in
       influxdb
       ipcalc
       jq
-      #kitty
+      kitty
       lorri
       ncurses6
       nix-prefetch-git
@@ -254,6 +276,7 @@ in
       python3
       ripgrep
       rsync
+      silver-searcher
       ssm-session-manager-plugin
       up
       websocat
@@ -426,11 +449,6 @@ in
           config = "";
 	      }
       );
-    # home.file.".doom.d" = {
-    #   source = ../files/doom;
-    #   recursive = true;
-    #   onChange = builtins.readFile ../files/doom/bin/reload;
-    # };
 
     programs.fzf.enable = true;
     programs.fzf.enableZshIntegration = true;

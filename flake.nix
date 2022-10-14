@@ -2,12 +2,13 @@
   description = "srstrong's systems configuration";
 
   inputs = {
-    nixpkgs.url = github:nixos/nixpkgs/nixpkgs-unstable;
+    nixpkgs.url = github:nixos/nixpkgs/release-22.05;
     darwin.url = github:lnl7/nix-darwin;
-    home.url = github:nix-community/home-manager;
+    home.url = github:nix-community/home-manager/release-22.05;
     nur.url = github:nix-community/NUR;
     private.url = git+ssh://git@github.com/srstrong/nix-env-priv?ref=main;
-    emacs.url = github:srstrong/emacs;
+    #emacs.url = github:srstrong/emacs;
+    emacs.url = github:cmacrae/emacs;
     emacs-overlay.url = github:nix-community/emacs-overlay;
     #rnix-lsp.url = github:nix-community/rnix-lsp;
     #deploy-rs.url = "github:serokell/deploy-rs";
@@ -27,6 +28,7 @@
       domain = "gables.lan";
       commonDarwinConfig = [
         ./modules/mac.nix
+        ./modules/applications.nix
         home.darwinModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -36,12 +38,9 @@
             nur.overlay
             emacs.overlay
             emacs-overlay.overlay
-            #spacebar.overlay
           ];
         }
       ];
-
-      #mailIndicator = mailbox: ''"mu find 'm:/${mailbox}/inbox' flag:unread | wc -l | tr -d \"[:blank:]\""'';
 
     in
     {
@@ -56,25 +55,36 @@
             { pkgs, config, ... }: {
               networking.hostName = "macbookM1";
 
-              #services.spacebar.config.right_shell_command = mailIndicator "fastmail";
-
               home-manager.users.steve = {
-                home.packages = [
-                  #deploy-rs.defaultPackage.x86_64-darwin
+                home.packages = with pkgs; [
                 ];
               };
 
               homebrew.masApps = {
-                #Xcode = 497799835;
               };
 
-              #homebrew.brews = [ "ios-deploy" ];
-  # services.nginx.enable = true;
-  # services.nginx.virtualHosts."myhost.org" = {
-  #   addSSL = true;
-  #   enableACME = true;
-  #   root = "/var/www/myhost.org";
-  # };
+              # home.activation = {
+              #     # This should be removed once
+              #     # https://github.com/nix-community/home-manager/issues/1341 is closed.
+              #     aliasApplications = home.lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              #       app_folder="$(echo ~/Applications)/Home Manager Apps"
+              #       home_manager_app_folder="$genProfilePath/home-path/Applications"
+              #       $DRY_RUN_CMD rm -rf "$app_folder"
+              #       # NB: aliasing ".../home-path/Applications" to "~/Applications/Home Manager Apps" doesn't
+              #       #     work (presumably because the individual apps are symlinked in that directory, not
+              #       #     aliased). So this makes "Home Manager Apps" a normal directory and then aliases each
+              #       #     application into there directly from its location in the nix store.
+              #       $DRY_RUN_CMD mkdir "$app_folder"
+              #       for app in $(find "$newGenPath/home-path/Applications" -type l -exec readlink -f {} \;)
+              #       do
+              #         $DRY_RUN_CMD osascript \
+              #           -e "tell app \"Finder\"" \
+              #           -e "make new alias file at POSIX file \"$app_folder\" to POSIX file \"$app\"" \
+              #           -e "set name of result to \"$(basename $app)\"" \
+              #           -e "end tell"
+              #       done
+              #     '';
+              #   };
 
             }
           )
