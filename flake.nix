@@ -28,7 +28,8 @@
       domain = "gables.lan";
       commonDarwinConfig = [
         ./modules/mac.nix
-        ./modules/applications.nix
+#        ./modules/applications.nix
+        ./modules/linkapps.nix
         home.darwinModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -48,6 +49,7 @@
         specialArgs = {
           nix-env-config.os = "darwin";
           private = inputs.private;
+#          username = "steve";
         };
         system = "aarch64-darwin";
         modules = commonDarwinConfig ++ [

@@ -27,7 +27,11 @@ in
   nixpkgs.config.allowUnsupportedSystem = true;
 
   environment.shells = [ pkgs.zsh ];
-  environment.systemPackages = [ pkgs.zsh pkgs.gcc ];
+  environment.systemPackages = with pkgs; [
+    zsh
+    gcc
+    kitty
+  ];
   environment.variables = { GH_TOKEN = private.gh_token; };
   programs.bash.enable = false;
   programs.zsh.enable = true;
@@ -267,7 +271,7 @@ in
       influxdb
       ipcalc
       jq
-      kitty
+      #kitty
       lorri
       ncurses6
       nix-prefetch-git
