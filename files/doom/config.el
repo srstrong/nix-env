@@ -60,17 +60,17 @@
 ;;    :after company
 ;;    :init (setq company-quickhelp-delay company-idle-delay))
 
-;; (add-hook 'psc-ide-mode-hook
-;;           (lambda ()
-;;             (when (psc-ide-mode) (psc-ide-mode -1))
-;;             )
-;;           )
-
 (add-hook 'lsp-mode-hook
           (lambda ()
             (psc-ide-mode -1)
             (setq-local company-format-margin-function
                         #'company-vscode-light-icons-margin)))
+
+(defun change-purs-syntax-table () "Stop '\' being treated as an escape char" (modify-syntax-entry ?\\ "w" purescript-mode-syntax-table))
+
+(use-package! purescript-mode
+  :config (change-purs-syntax-table)
+)
 
 (with-eval-after-load 'lsp-mode
   (add-to-list 'lsp-language-id-configuration

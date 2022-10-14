@@ -29,6 +29,7 @@ in
 
   environment.shells = [ pkgs.zsh ];
   environment.systemPackages = [ pkgs.zsh pkgs.gcc ];
+  environment.variables = { GH_TOKEN = private.gh_token; };
   programs.bash.enable = false;
   programs.zsh.enable = true;
 
@@ -95,6 +96,7 @@ in
     "homebrew/core"
     "homebrew/cask"
     "homebrew/cask-drivers"
+    "ktr0731/evans"
   ];
 
   homebrew.casks = [
@@ -103,6 +105,10 @@ in
     # "spotify"
     # "yubico-yubikey-manager"
     # "yubico-yubikey-personalization-gui"
+  ];
+
+  homebrew.brews = [
+    "evans"
   ];
 
   homebrew.masApps = {

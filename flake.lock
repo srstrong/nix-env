@@ -173,11 +173,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1659624451,
-        "narHash": "sha256-U/hizr75pDsmtcXRWAUxt+/Vb4twT1bQzhmKZgX5O40=",
+        "lastModified": 1664542711,
+        "narHash": "sha256-eebisvlBYrVDbg0O7QZgSO5U8IW30G95xLoOATlBCRA=",
         "ref": "main",
-        "rev": "502f9e769b6603721fde5ca38b464cbe4441a32c",
-        "revCount": 7,
+        "rev": "e795f2afa80ce3940f15bf198c1cfcc892c85a69",
+        "revCount": 9,
         "type": "git",
         "url": "ssh://git@github.com/srstrong/nix-env-priv"
       },
