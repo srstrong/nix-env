@@ -29,7 +29,7 @@
       commonDarwinConfig = [
         ./modules/mac.nix
 #        ./modules/applications.nix
-        ./modules/linkapps.nix
+#        ./modules/linkapps.nix
         home.darwinModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;

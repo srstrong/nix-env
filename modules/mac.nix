@@ -206,13 +206,13 @@ in
 #  launchd.user.agents.spacebar.serviceConfig.StandardErrorPath = "/tmp/spacebar.err.log";
 #  launchd.user.agents.spacebar.serviceConfig.StandardOutPath = "/tmp/spacebar.out.log";
 
-  launchd.user.agents.nginx = {
-    command = "${pkgs.nginx}/bin/nginx -e /tmp/nginx/error.log -p /tmp -c ~/.nginx/config";
-    path = [pkgs.nginx];
-    serviceConfig = {
-      KeepAlive = true;
-    };
-  };
+  # launchd.user.agents.nginx = {
+  #   command = "${pkgs.nginx}/bin/nginx -e /tmp/nginx/error.log -p /tmp -c ~/.nginx/config";
+  #   path = [pkgs.nginx];
+  #   serviceConfig = {
+  #     KeepAlive = true;
+  #   };
+  # };
 
   # Recreate /run/current-system symlink after boot
   services.activate-system.enable = true;
@@ -276,7 +276,7 @@ in
       ncurses6
       nix-prefetch-git
       nmap
-      nginx
+      #nginx
       python3
       ripgrep
       rsync
@@ -641,112 +641,6 @@ in
           set -ga terminal-overrides ",xterm-256color:Tc"
           set -g default-terminal "xterm-256color"
          '';
-#        shortcut = "q";
-#        keyMode = "vi";
-#        clock24 = true;
-#        customPaneNavigationAndResize = true;
-#        secureSocket = false;
-#        extraConfig = ''
-#          unbind [
-#          unbind ]
-#
-#          bind ] next-window
-#          bind [ previous-window
-#
-#          bind Escape copy-mode
-#          bind P paste-buffer
-#          bind-key -T copy-mode-vi v send-keys -X begin-selection
-#          bind-key -T copy-mode-vi y send-keys -X copy-selection
-#          bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
-#          set -g mouse on
-#
-#          bind-key -r C-k resize-pane -U
-#          bind-key -r C-j resize-pane -D
-#          bind-key -r C-h resize-pane -L
-#          bind-key -r C-l resize-pane -R
-#
-#          bind-key -r C-M-k resize-pane -U 5
-#          bind-key -r C-M-j resize-pane -D 5
-#          bind-key -r C-M-h resize-pane -L 5
-#          bind-key -r C-M-l resize-pane -R 5
-#
-#          set -g display-panes-colour white
-#          set -g display-panes-active-colour red
-#          set -g display-panes-time 1000
-#          set -g status-justify left
-#          set -g set-titles on
-#          set -g set-titles-string 'tmux: #T'
-#          set -g repeat-time 100
-#          set -g renumber-windows on
-#          set -g renumber-windows on
-#
-#          setw -g monitor-activity on
-#          setw -g automatic-rename on
-#          setw -g clock-mode-colour red
-#          setw -g clock-mode-style 24
-#          setw -g alternate-screen on
-#
-#          set -g status-left-length 100
-#          set -g status-left "#(${pkgs.bash}/bin/bash ${kubeTmux}/kube.tmux 250 green colour3)  "
-#          set -g status-right-length 100
-#          set -g status-right "#[fg=red,bg=default] %b %d #[fg=blue,bg=default] %R "
-#          set -g status-bg default
-#          setw -g window-status-format "#[fg=blue,bg=black] #I #[fg=blue,bg=black] #W "
-#          setw -g window-status-current-format "#[fg=blue,bg=default] #I #[fg=red,bg=default] #W "
-#
-#          run-shell ${tmuxYank}/yank.tmux
-#        '';
       };
-
-    # Global Emacs keybindings
-#    home.file."Library/KeyBindings/DefaultKeyBinding.dict".text = ''
-#      {
-#          /* Ctrl shortcuts */
-#          "^l"        = "centerSelectionInVisibleArea:";  /* C-l          Recenter */
-#          "^/"        = "undo:";                          /* C-/          Undo */
-#          "^_"        = "undo:";                          /* C-_          Undo */
-#          "^ "        = "setMark:";                       /* C-Spc        Set mark */
-#          "^\@"       = "setMark:";                       /* C-@          Set mark */
-#          "^w"        = "deleteToMark:";                  /* C-w          Delete to mark */
-#
-#          /* Meta shortcuts */
-#          "~f"        = "moveWordForward:";               /* M-f          Move forward word */
-#          "~b"        = "moveWordBackward:";              /* M-b          Move backward word */
-#          "~<"        = "moveToBeginningOfDocument:";     /* M-<          Move to beginning of document */
-#          "~>"        = "moveToEndOfDocument:";           /* M->          Move to end of document */
-#          "~v"        = "pageUp:";                        /* M-v          Page Up */
-#          "~/"        = "complete:";                      /* M-/          Complete */
-#          "~c"        = ( "capitalizeWord:",              /* M-c          Capitalize */
-#                          "moveForward:",
-#                          "moveForward:");
-#          "~u"        = ( "uppercaseWord:",               /* M-u          Uppercase */
-#                          "moveForward:",
-#                          "moveForward:");
-#          "~l"        = ( "lowercaseWord:",               /* M-l          Lowercase */
-#                          "moveForward:",
-#                          "moveForward:");
-#          "~d"        = "deleteWordForward:";             /* M-d          Delete word forward */
-#          "^~h"       = "deleteWordBackward:";            /* M-C-h        Delete word backward */
-#          "~\U007F"   = "deleteWordBackward:";            /* M-Bksp       Delete word backward */
-#          "~t"        = "transposeWords:";                /* M-t          Transpose words */
-#          "~\@"       = ( "setMark:",                     /* M-@          Mark word */
-#                          "moveWordForward:",
-#                          "swapWithMark");
-#          "~h"        = ( "setMark:",                     /* M-h          Mark paragraph */
-#                          "moveToEndOfParagraph:",
-#                          "swapWithMark");
-#
-#          /* C-x shortcuts */
-#          "^x" = {
-#              "u"     = "undo:";                          /* C-x u        Undo */
-#              "k"     = "performClose:";                  /* C-x k        Close */
-#              "^f"    = "openDocument:";                  /* C-x C-f      Open (find file) */
-#              "^x"    = "swapWithMark:";                  /* C-x C-x      Swap with mark */
-#              "^m"    = "selectToMark:";                  /* C-x C-m      Select to mark*/
-#              "^s"    = "saveDocument:";                  /* C-x C-s      Save */
-#              "^w"    = "saveDocumentAs:";                /* C-x C-w      Save as */
-#          };
-#      }
-#    '';
   };
 }

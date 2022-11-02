@@ -68,6 +68,20 @@
 
 (defun change-purs-syntax-table () "Stop '\' being treated as an escape char" (modify-syntax-entry ?\\ "w" purescript-mode-syntax-table))
 
+;; (use-package! eglot
+;;   :config
+;;     (add-to-list 'eglot-server-programs
+;;                  '(purescript-mode  . ("purescript-language-server" "--stdio"
+;;                                        "--config {\"purescript.codegenTargets\": [\"corefn\"],
+;;                                                   \"purescript.addPscPackageSources\": true,
+;;                                                   \"purescript.addSpagoSources\": true,
+;;                                                   \"purescript.censorWarnings\": [\"ShadowedName\", \"WildcardInferredType\"],
+;;                                                   \"purescript.formatter\": \"purs-tidy\",
+;;                                                   \"purescript.autocompleteLimit\": 50
+;;                                                  }")))
+;; )
+
+
 (use-package! purescript-mode
   :config (change-purs-syntax-table)
 )
@@ -85,14 +99,34 @@
           )
    :commands lsp
    :config
-   (lsp-register-custom-settings
-    '(("purescript.codegenTargets" ["corefn"])
-      ("purescript.addPscPackageSources" t)
-      ("purescript.addSpagoSources" t)
-      ("purescript.censorWarnings" ["ShadowedName" "WildcardInferredType"])
-      ("purescript.formatter" "purs-tidy")
-      ("purescript.autocompleteLimit" 50)
-      ))
+   (defcustom-lsp lsp-purescript-codegenTargets []
+     "codeGen Targets"
+     :type 'lsp-string-vector
+     :group 'lsp-purescript
+     :lsp-path "purescript.codegenTargets"
+   )
+   (defcustom-lsp lsp-purescript-censorWarnings []
+     "Censor warnings"
+     :type 'lsp-string-vector
+     :group 'lsp-purescript
+     :lsp-path "purescript.censorWarnings"
+   )
+   (defcustom-lsp lsp-purescript-addPscPackageSources t
+     "Add PSC Package sources"
+     :type 'string
+     :group 'lsp-purescript
+     :lsp-path "purescript.addPscPackageSources"
+   )
+   (defcustom-lsp lsp-purescript-autocompleteLimit 100
+     "Autocomplete limit"
+     :type 'number
+     :group 'lsp-purescript
+     :lsp-path "purescript.autocompleteLimit"
+   )
+   (setq lsp-purescript-formatter "purs-tidy")
+   (setq lsp-purescript-codegenTargets ["corefn"])
+   (setq lsp-purescript-autocompleteLimit 50)
+   (setq lsp-purescript-censorWarnings ["ShadowedName" "WildcardInferredType"])
    (setq lsp-prefer-flymake nil ;; Prefer using lsp-ui (flycheck) over flymake.
          ;;lsp-modeline-code-actions-segments '(count icon)
          lsp-lens-mode nil
@@ -101,7 +135,7 @@
          lsp-modeline-code-actions-enable nil
          lsp-modeline-diagnostics-mode 1
          lsp-enable-xref t
-         lsp-log-io t
+         ;;lsp-log-io t
          lsp-diagnostic-clean-after-change nil
          lsp-keymap-prefix "C-c l"
          lsp-purescript-server-args '("--stdio" "--log" "/tmp/pls.log")
