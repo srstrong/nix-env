@@ -1,4 +1,4 @@
-{ pkgs, inputs, private, ... }:
+{ pkgs, inputs, private, nix-env-config, ... }:
 let
   foo = "bar";
 in
