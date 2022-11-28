@@ -10,8 +10,8 @@
   outputs = { self, darwin, nixpkgs }: {
     darwinConfigurations.macbookM1 = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
-      modules = [ ./configuration.nix ];
-      inputs = { inherit darwin dotfiles nixpkgs; };
+      modules = [ ./common/system-configuration.nix ];
+      inputs = { inherit darwin nixpkgs; };
     };
   };
 }
