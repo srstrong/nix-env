@@ -1,0 +1,39 @@
+softwareupdate --install-rosetta
+
+# Install brew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install nix
+
+sh <(curl -L https://nixos.org/nix/install)
+
+# Update nix
+sudo -i sh -c 'nix-channel --update && nix-env -iA nixpkgs.nix && launchctl remove org.nixos.nix-daemon && launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist'
+
+# Install darwin-nix
+
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+./result/bin/darwin-installer
+
+# This puts the default configuration.nix in ~/.nixpkgs/darwin-configuration.nix
+
+
+
+# Flakes
+
+nix-env -iA nixpkgs.nixFlakes
+
+# Update /etc/nix/nix.conf and add:
+experimental-features = nix-command flakes 
+
+# From ~/dev/nix-env (where the root flake.nix exists)
+nix build .#darwinConfigurations.macbookM1.system
+./result/sw/bin/darwin-rebuild switch --flake .#macbookM1
+
+
+# To update flake (e.g., 'home'):
+# nix flake lock --update-input home
+
+Zoom 
+Slack
+
