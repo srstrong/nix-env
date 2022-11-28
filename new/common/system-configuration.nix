@@ -1,8 +1,5 @@
-{ pkgs, ... }:
+{ pkgs, private, ... }:
 let
-  mailAddr = name: domain: "${name}@${domain}";
-  primaryEmail = mailAddr "steve" "srstrong.com";
-  fullName = "Steve Strong";
 in
 {
   # List packages installed in system profile. To search by name, run:
@@ -31,6 +28,24 @@ in
   # Misc nix settings
   nix.settings.max-jobs = "auto";
   nix.settings.cores = 0;
+  nix.configureBuildUsers = true;
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnsupportedSystem = true;
+  
+  time.timeZone = "Europe/London";
+  
+  environment.shells = [ pkgs.zsh ];
+  environment.variables = { GH_TOKEN = private.gh_token; };
+
+  fonts.fontDir.enable = true;
+  fonts.fonts = with pkgs; [
+    emacs-all-the-icons-fonts
+    fira-code
+    font-awesome
+    inconsolata
+#    nerdfonts
+    roboto
+    roboto-mono
+  ];
+
 }

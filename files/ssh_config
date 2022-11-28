@@ -28,6 +28,15 @@ Host stagingBuild
     User ssm-user
     ProxyCommand sh -c "aws ssm start-session --profile 628351451087_id3as --region eu-west-1 --target i-07dde371a04b76dd5 --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
 
+Host jenkins
+  HostName jenkinsbuilder.jeo.org.uk
+  User jenkins
+  Port 7894
+  ForwardAgent yes
+
 #Host i-* mi-*
 #    User ssm-user
 #    ProxyCommand sh -c "aws ssm start-session --profile 302824998957_development --region $REGION --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+
+IdentityFile ~/.ssh/id_rsa
+IdentityFile ~/.ssh/id_ed25519

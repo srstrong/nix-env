@@ -24,7 +24,8 @@ nix build .#darwinConfigurations.macbookM1.system
 ./result/sw/bin/darwin-rebuild switch --flake .#macbookM1
 
 
-
+# To update flake (e.g., 'home'):
+# nix flake lock --update-input home
 
 Zoom 
 Slack

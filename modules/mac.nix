@@ -72,7 +72,7 @@ in
     fira-code
     font-awesome
     inconsolata
-    nerdfonts
+#    nerdfonts
     roboto
     roboto-mono
   ];

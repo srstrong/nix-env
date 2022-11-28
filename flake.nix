@@ -2,38 +2,33 @@
   description = "srstrong's systems configuration";
 
   inputs = {
-    nixpkgs.url = github:nixos/nixpkgs/release-22.05;
+    nixpkgs.url = github:nixos/nixpkgs/nixos-unstable;
     darwin.url = github:lnl7/nix-darwin;
-    home.url = github:nix-community/home-manager/release-22.05;
+    home.url = github:nix-community/home-manager;
     nur.url = github:nix-community/NUR;
     private.url = git+ssh://git@github.com/srstrong/nix-env-priv?ref=main;
-    #emacs.url = github:srstrong/emacs;
     emacs.url = github:cmacrae/emacs;
     emacs-overlay.url = github:nix-community/emacs-overlay;
-    #rnix-lsp.url = github:nix-community/rnix-lsp;
-    #deploy-rs.url = "github:serokell/deploy-rs";
-    #spacebar.url = github:cmacrae/spacebar;
-    #sops.url = github:Mic92/sops-nix;
 
     # Follows
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home.inputs.nixpkgs.follows = "nixpkgs";
-    #rnix-lsp.inputs.nixpkgs.follows = "nixpkgs";
-    #sops.inputs.nixpkgs.follows = "nixpkgs";
+    private.inputs.nixpkgs.follows = "nixpkgs";
+    emacs.inputs.nixpkgs.follows = "nixpkgs";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  #outputs = { self, nixpkgs, darwin, home, deploy-rs, sops, ... }@inputs:
   outputs = { self, nixpkgs, darwin, home, ... }@inputs:
     let
       domain = "gables.lan";
       commonDarwinConfig = [
-        ./modules/mac.nix
+#        ./modules/mac.nix
 #        ./modules/applications.nix
 #        ./modules/linkapps.nix
-        home.darwinModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-        }
+        # home.darwinModules.home-manager {
+        #   home-manager.useGlobalPkgs = true;
+        #   home-manager.useUserPackages = true;
+        # }
         {
           nixpkgs.overlays = with inputs; [
             nur.overlay
@@ -49,21 +44,30 @@
         specialArgs = {
           nix-env-config.os = "darwin";
           private = inputs.private;
-#          username = "steve";
         };
         system = "aarch64-darwin";
         modules = commonDarwinConfig ++ [
           (
             { pkgs, config, ... }: {
+              nix.useDaemon = true;
+
               networking.hostName = "macbookM1";
 
-              home-manager.users.steve = {
-                home.packages = with pkgs; [
-                ];
-              };
+              # nix.binaryCaches = [
+              #   "https://cachix.org/api/v1/cache/emacs"
+              # ];
 
-              homebrew.masApps = {
-              };
+              # nix.binaryCachePublicKeys = [
+              #   "emacs.cachix.org-1:b1SMJNLY/mZF6GxQE+eDBeps7WnkT0Po55TAyzwOxTY="
+              # ];
+
+              # home-manager.users.steve = {
+              #   home.packages = with pkgs; [
+              #   ];
+              # };
+
+              # homebrew.masApps = {
+              # };
 
               # home.activation = {
               #     # This should be removed once
