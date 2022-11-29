@@ -3,7 +3,11 @@ let
   foo = "bar";
 in
 {
+  imports = [ ./apps.nix ];
+
   home.stateVersion = "23.05";
+
+  disabledModules = [ "targets/darwin/linkapps.nix" ];
 
   home.packages = with pkgs; [
     alacritty
