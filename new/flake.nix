@@ -43,7 +43,6 @@
           ];
         }
         ./common/system-configuration.nix
-        ./common/dotfiles.nix
 	./os/macos.nix
         home-manager.darwinModules.home-manager
         {

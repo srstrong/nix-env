@@ -1,4 +1,4 @@
-{ pkgs, inputs, private, ... }:
+{ pkgs, inputs, private, nix-env-config, ... }:
 let
   foo = "bar";
 in
@@ -51,6 +51,7 @@ in
 
   home.sessionVariables = {
     PAGER = "less -R";
+    LSP_USE_PLISTS = "true";
   };
 
   programs.git = {
@@ -94,7 +95,6 @@ in
   };
 
   programs.bash.enable = false;
-  programs.zsh.enable = true;
   programs.emacs.enable = true;
   programs.emacs.package = 
     (
@@ -103,8 +103,145 @@ in
         alwaysTangle = true;
 
         # Custom overlay derived from 'emacs' flake input
-#        package = pkgs.emacs;
+  # package = pkgs.emacs;
         config = "";
             }
     );
+
+  programs.fzf.enable = true;
+  programs.fzf.enableZshIntegration = true;
+
+  programs.zsh = {
+    enable = true;
+    enableAutosuggestions = true;
+    enableCompletion = true;
+    defaultKeymap = "emacs";
+    sessionVariables = {
+      RPROMPT = "";
+      FZF_DEFAULT_COMMAND = "fd --type f";
+    };
+
+    shellAliases = {
+      cat = "bat";
+      diff = "diff -u | diff-so-fancy";
+    };
+
+    oh-my-zsh.enable = true;
+
+    plugins = [
+      {
+  name = "autopair";
+  file = "autopair.zsh";
+  src = pkgs.fetchFromGitHub {
+    owner = "hlissner";
+    repo = "zsh-autopair";
+    rev = "4039bf142ac6d264decc1eb7937a11b292e65e24";
+    sha256 = "02pf87aiyglwwg7asm8mnbf9b2bcm82pyi1cj50yj74z4kwil6d1";
+  };
+      }
+      {
+  name = "z";
+  file = "zsh-z.plugin.zsh";
+  src = pkgs.fetchFromGitHub {
+    owner = "agkozak";
+    repo = "zsh-z";
+    rev = "41439755cf06f35e8bee8dffe04f728384905077";
+    sha256 = "1dzxbcif9q5m5zx3gvrhrfmkxspzf7b81k837gdb93c4aasgh6x6";
+  };
+      }
+    ];
+
+    initExtra = ''
+  PROMPT=' %{$fg_bold[blue]%}$(get_pwd)%{$reset_color%} ''${prompt_suffix}'
+  local prompt_suffix="%(?:%{$fg_bold[green]%}❯ :%{$fg_bold[red]%}❯%{$reset_color%} "
+
+  function get_pwd(){
+      git_root=$PWD
+      while [[ $git_root != / && ! -e $git_root/.git ]]; do
+    git_root=$git_root:h
+      done
+      if [[ $git_root = / ]]; then
+    unset git_root
+    prompt_short_dir=%~
+      else
+    parent=''${git_root%\/*}
+    prompt_short_dir=''${PWD#$parent/}
+      fi
+      echo $prompt_short_dir
+            }
+
+  vterm_printf(){
+      if [ -n "$TMUX" ]; then
+    # Tell tmux to pass the escape sequences through
+    # (Source: http://permalink.gmane.org/gmane.comp.terminal-emulators.tmux.user/1324)
+    printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+      elif [ "''${TERM%%-*}" = "screen" ]; then
+    # GNU screen (screen, screen-256color, screen-256color-bce)
+    printf "\eP\e]%s\007\e\\" "$1"
+      else
+    printf "\e]%s\e\\" "$1"
+      fi
+      }
+    '';
+  };
+
+  programs.tmux =
+    let
+      kubeTmux = pkgs.fetchFromGitHub {
+        owner = "jonmosco";
+        repo = "kube-tmux";
+        rev = "7f196eeda5f42b6061673825a66e845f78d2449c";
+        sha256 = "1dvyb03q2g250m0bc8d2621xfnbl18ifvgmvf95nybbwyj2g09cm";
+      };
+
+      tmuxYank = pkgs.fetchFromGitHub {
+        owner = "tmux-plugins";
+        repo = "tmux-yank";
+        rev = "ce21dafd9a016ef3ed4ba3988112bcf33497fc83";
+        sha256 = "04ldklkmc75azs6lzxfivl7qs34041d63fan6yindj936r4kqcsp";
+      };
+    in
+    {
+      enable = true;
+      terminal = "xterm-256color";
+      extraConfig = ''
+        set -g history-limit 16384
+        set -ga terminal-overrides ",xterm-256color:Tc"
+        set -g default-terminal "xterm-256color"
+        bind-key Up    select-pane -U
+        bind-key Down  select-pane -D
+        bind-key Left  select-pane -L
+        bind-key Right select-pane -R
+       '';
+    };
+
+  home.file = ({
+    ".config/kitty/kitty.conf".source = ../files/kitty.conf;
+    ".alacritty.yml".source = ../files/alacritty.yml;
+    ".ssh/config".source = ../files/ssh_config;
+    ".nginx/config".source = ../files/nginx.config;
+    ".nginx/m1.gables.com.crt".source = private.m1-gables-com-crt;
+    ".nginx/m1.gables.com.key".source = private.m1-gables-com-key;
+    ".config/nixpkgs/config.nix".text = ''
+          { ... }:
+
+      { allowUnsupportedSystem = true; }
+    '';
+    ".doom.d" = {
+      source = ../files/doom;
+      recursive = true;
+      onChange = builtins.readFile ../files/doom/bin/reload;
+    };
+    "Library/Application\ Support/erlang_ls".source = ../files/erlang-ls-config.yaml;
+  } //
+  (if nix-env-config.os == "darwin" then
+    {
+    "Library/Application\ Support/erlang_ls".source = ../files/erlang-ls-config.yaml;
+    }
+   else
+     {
+       ".erlang_ls".source = ../files/erlang-ls-config.yaml;
+     }
+  ));
+
 }
