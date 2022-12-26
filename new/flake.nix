@@ -60,7 +60,7 @@
       inputs = { inherit darwin nixpkgs; };
     };
 
-    linuxConfigurations.nuc = nixpkgs.lib.nixosSysten {
+    nixosConfigurations.nuc = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
 
       specialArgs = {
@@ -69,27 +69,29 @@
       };
 
       modules = [
-        {
-          nixpkgs.overlays = with inputs; [
-            # nur.overlay
-            # emacs.overlay
-            emacs-overlay.overlay
-          ];
-        }
-        ./common/system-configuration.nix
-        home-manager.darwinModules.home-manager
-        {
-           home-manager.useGlobalPkgs = true;
-           home-manager.useUserPackages = true;
-           home-manager.users.steve = import ./common/home-configuration.nix;
-           home-manager.extraSpecialArgs = {
-             nix-env-config.os = "linux";
-             private = inputs.private;
-           };
-        }
+        ./os/linux/nuc.nix
+
+        # {
+        #   nixpkgs.overlays = with inputs; [
+        #     # nur.overlay
+        #     # emacs.overlay
+        #     emacs-overlay.overlay
+        #   ];
+        # }
+        # ./common/system-configuration.nix
+        # home-manager.darwinModules.home-manager
+        # {
+        #    home-manager.useGlobalPkgs = true;
+        #    home-manager.useUserPackages = true;
+        #    home-manager.users.steve = import ./common/home-configuration.nix;
+        #    home-manager.extraSpecialArgs = {
+        #      nix-env-config.os = "linux";
+        #      private = inputs.private;
+        #    };
+        # }
       ];
 
-      inputs = { inherit darwin nixpkgs; };
+      #inputs = { inherit nixpkgs; };
     };
   };
 }
