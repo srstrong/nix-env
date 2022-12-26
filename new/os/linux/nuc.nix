@@ -17,6 +17,8 @@ args@{ config, pkgs, ... }:
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  nixpkgs.config.allowUnfree = true;
+
   boot.kernel.sysctl = {
     "net.core.rmem_default" = 65536;
     "net.core.rmem_max" = 16777216;
@@ -119,11 +121,15 @@ args@{ config, pkgs, ... }:
 
   services.grafana = {
     enable   = true;
-    port     = 8000;
-    addr     = "192.168.1.93";
-    domain   = "nuc";
-    protocol = "http";
     dataDir  = "/var/lib/grafana";
+    settings = {
+      server = {
+        protocol = "http";
+        domain = "nuc";
+        http_addr = "192.168.1.93";
+        http_port = 8000;
+      };
+    };
   };
 
   services.influxdb = {

@@ -70,25 +70,24 @@
 
       modules = [
         ./os/linux/nuc.nix
-
-        # {
-        #   nixpkgs.overlays = with inputs; [
-        #     # nur.overlay
-        #     # emacs.overlay
-        #     emacs-overlay.overlay
-        #   ];
-        # }
-        # ./common/system-configuration.nix
-        # home-manager.darwinModules.home-manager
-        # {
-        #    home-manager.useGlobalPkgs = true;
-        #    home-manager.useUserPackages = true;
-        #    home-manager.users.steve = import ./common/home-configuration.nix;
-        #    home-manager.extraSpecialArgs = {
-        #      nix-env-config.os = "linux";
-        #      private = inputs.private;
-        #    };
-        # }
+        ./common/system-configuration.nix
+        {
+          nixpkgs.overlays = with inputs; [
+            # nur.overlay
+            # emacs.overlay
+            emacs-overlay.overlay
+          ];
+        }
+        home-manager.nixosModules.home-manager
+        {
+           home-manager.useGlobalPkgs = true;
+           home-manager.useUserPackages = true;
+           home-manager.users.steve = import ./common/home-configuration.nix;
+           home-manager.extraSpecialArgs = {
+             nix-env-config.os = "linux";
+             private = inputs.private;
+           };
+        }
       ];
 
       #inputs = { inherit nixpkgs; };

@@ -3,7 +3,14 @@ let
   foo = "bar";
 in
 {
-  imports = [ ./apps.nix ];
+  imports =
+    (if nix-env-config.os == "darwin" then
+      [ ./apps.nix
+      ]
+     else
+       [
+       ]
+    );
 
   home.stateVersion = "23.05";
 
@@ -98,7 +105,13 @@ in
     nix-direnv.enable = true;
   };
 
-  programs.bash.enable = false;
+  programs.bash = {
+    enable = true;
+    initExtra = ''
+  eval "$(direnv hook bash)"
+  '';
+  };
+
   programs.emacs.enable = true;
   programs.emacs.package = 
     (
@@ -134,24 +147,24 @@ in
 
     plugins = [
       {
-  name = "autopair";
-  file = "autopair.zsh";
-  src = pkgs.fetchFromGitHub {
-    owner = "hlissner";
-    repo = "zsh-autopair";
-    rev = "4039bf142ac6d264decc1eb7937a11b292e65e24";
-    sha256 = "02pf87aiyglwwg7asm8mnbf9b2bcm82pyi1cj50yj74z4kwil6d1";
-  };
+        name = "autopair";
+        file = "autopair.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "hlissner";
+          repo = "zsh-autopair";
+          rev = "4039bf142ac6d264decc1eb7937a11b292e65e24";
+          sha256 = "02pf87aiyglwwg7asm8mnbf9b2bcm82pyi1cj50yj74z4kwil6d1";
+        };
       }
       {
-  name = "z";
-  file = "zsh-z.plugin.zsh";
-  src = pkgs.fetchFromGitHub {
-    owner = "agkozak";
-    repo = "zsh-z";
-    rev = "41439755cf06f35e8bee8dffe04f728384905077";
-    sha256 = "1dzxbcif9q5m5zx3gvrhrfmkxspzf7b81k837gdb93c4aasgh6x6";
-  };
+        name = "z";
+        file = "zsh-z.plugin.zsh";
+        src = pkgs.fetchFromGitHub {
+          owner = "agkozak";
+          repo = "zsh-z";
+          rev = "41439755cf06f35e8bee8dffe04f728384905077";
+          sha256 = "1dzxbcif9q5m5zx3gvrhrfmkxspzf7b81k837gdb93c4aasgh6x6";
+        };
       }
     ];
 
@@ -186,6 +199,8 @@ in
     printf "\e]%s\e\\" "$1"
       fi
       }
+
+  eval "$(direnv hook zsh)"
     '';
   };
 
