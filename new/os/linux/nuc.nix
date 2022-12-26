@@ -7,7 +7,7 @@ args@{ config, pkgs, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
+      ./nuc-hardware.nix
 
       # Common things
       #(import ./../../common (args // { hostOs = "linux"; } ))
