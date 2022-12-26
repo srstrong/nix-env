@@ -49,6 +49,8 @@ in
       # The terminal type to surface inside of tmux
       set -g default-terminal "xterm-256color"
 
+      set -g default-shell /run/current-system/sw/bin/bash
+
       ${lib.concatStrings (map (x: "run-shell ${x.rtp}\n") tmuxPlugins)}
     '';
 

@@ -4,7 +4,7 @@ let
     builtins.fetchGit {
       url = "https://github.com/nix-community/emacs-overlay.git";
       ref = "master";
-      rev = "0fce209cb26c7f56090406058065081a3cddc76a";
+      rev = "c456764cdce036f0340b2a5f138416cf39dcca6f";
     };
 
   nixpkgs =

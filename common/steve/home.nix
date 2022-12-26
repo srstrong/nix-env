@@ -26,11 +26,10 @@ in
     gitAndTools.tig
     git-lfs
     dhall
-    ag
+    silver-searcher
     ripgrep
     fzf
     jq
-    python27Packages.jsmin
     websocat
     zlib.dev
     #stack
@@ -40,7 +39,8 @@ in
 
     # inetutils
   ] ++ lib.optionals stdenv.isLinux [
-                 glibcLocales
+    docker
+    glibcLocales
        ]
     ++ lib.optionals stdenv.isDarwin [
                  darwin.apple_sdk.frameworks.Security

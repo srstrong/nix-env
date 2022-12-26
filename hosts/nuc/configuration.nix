@@ -17,6 +17,24 @@ args@{ config, pkgs, ... }:
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.kernel.sysctl = {
+    "net.core.rmem_default" = 65536;
+    "net.core.rmem_max" = 16777216;
+    "net.core.wmem_default" = 65536;
+    "net.core.wmem_max" = 16777216;
+    "net.ipv4.udp_rmem_min" = 131072;
+    "net.ipv4.udp_wmem_min" = 131072;
+    "net.ipv4.udp_mem" = "65536 12582912 16777216";
+
+    "net.ipv4.tcp_mem" = "12582912 12582912 12582912";
+    "net.ipv4.tcp_wmem"  = "4096 12582912 16777216";
+    "net.ipv4.tcp_rmem"  = "4096 12582912 16777216";
+
+    "net.ipv4.tcp_window_scaling" = 1;
+    "net.ipv4.route.flush" = 1;
+    "net.core.netdev_max_backlog" = 100000;
+  };
+
   networking.hostName = "nuc"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -27,6 +45,11 @@ args@{ config, pkgs, ... }:
   networking.interfaces.eno1.useDHCP = true;
   networking.interfaces.enp5s0.useDHCP = true;
   networking.interfaces.wlp6s0.useDHCP = true;
+
+  networking.extraHosts =
+  ''
+    192.168.1.93 nuc
+  '';
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -53,8 +76,11 @@ args@{ config, pkgs, ... }:
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.steve = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
+
+  users.users.kapacitor.group = "kapacitor";
+  users.groups.kapacitor = {};
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -151,6 +177,8 @@ args@{ config, pkgs, ... }:
     ];
   };
 
+  virtualisation.docker.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -159,6 +187,9 @@ args@{ config, pkgs, ... }:
     grafana
     telegraf
     kapacitor
+    procps
+    libev
+    nginx
   ];
 
 }
