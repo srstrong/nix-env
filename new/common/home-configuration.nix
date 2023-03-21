@@ -41,7 +41,7 @@ in
     ncurses6
     nix-prefetch-git
     nmap
-    #nginx
+    nginx
     python3
     ripgrep
     rsync
@@ -127,7 +127,7 @@ in
 
     shellAliases = {
       cat = "bat";
-      diff = "diff -u | diff-so-fancy";
+      diff = "f() { if (($# == 0)); then diff -u | diff-so-fancy; else diff -u $1 $2 | diff-so-fancy; fi}; f";
     };
 
     oh-my-zsh.enable = true;

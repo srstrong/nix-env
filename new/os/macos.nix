@@ -72,5 +72,11 @@ in
     # YubicoAuthenticator = 1497506650;
   };
 
+  launchd.user.agents.nginx = {
+    command = "${pkgs.nginx}/bin/nginx -e /tmp/nginx/error.log -p /tmp -c ~/.nginx/config";
+    path = [pkgs.nginx];
+    serviceConfig = {
+      KeepAlive = true;
+    };
+  };
 }
-
