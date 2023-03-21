@@ -11,7 +11,6 @@ in
   ];
 
   # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
   nix.package = pkgs.nixUnstable;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
@@ -21,14 +20,9 @@ in
   programs.zsh.enable = true;  # default shell on catalina
   # programs.fish.enable = true;
 
-  # Used for backwards compatibility, please read the changelog before changing.
-  # $ darwin-rebuild changelog
-  system.stateVersion = 4;
-
   # Misc nix settings
   nix.settings.max-jobs = "auto";
   nix.settings.cores = 0;
-  nix.configureBuildUsers = true;
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowUnsupportedSystem = true;
   

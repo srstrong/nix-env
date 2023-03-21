@@ -3,6 +3,12 @@ let
 in
 {
   nix.settings.trusted-users = [ "root" "steve" ];
+  services.nix-daemon.enable = true;
+  nix.configureBuildUsers = true;
+
+  # Used for backwards compatibility, please read the changelog before changing.
+  # $ darwin-rebuild changelog
+  system.stateVersion = 4;
 
   users.users.steve.shell = pkgs.zsh;
   users.users.steve.home = "/Users/steve";
