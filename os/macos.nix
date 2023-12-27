@@ -59,6 +59,7 @@ in
     "homebrew/cask"
     "homebrew/cask-drivers"
     "ktr0731/evans"
+    "kak-lsp/kak-lsp"
   ];
 
   homebrew.casks = [
@@ -71,6 +72,8 @@ in
 
   homebrew.brews = [
     "evans"
+    "kakoune"
+    "kak-lsp/kak-lsp/kak-lsp"
   ];
 
   homebrew.masApps = {

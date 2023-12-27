@@ -39,6 +39,7 @@ in
     gnupg
     gnused
     htop
+    helix
     iftop
     influxdb
     ipcalc
@@ -75,6 +76,9 @@ in
       };
       core = {
         pager = "diff-so-fancy | less --tabs=4 -RFX";
+      };
+      diff = {
+        algorithm = "histogram";
       };
       interactive = {
         diffFilter = "diff-so-fancy --patch";
@@ -227,6 +231,7 @@ in
         set -g history-limit 16384
         set -ga terminal-overrides ",xterm-256color:Tc"
         set -g default-terminal "xterm-256color"
+        set -sg escape-time 0
         bind-key Up    select-pane -U
         bind-key Down  select-pane -D
         bind-key Left  select-pane -L
@@ -239,6 +244,8 @@ in
     ".alacritty.yml".source = ../files/alacritty.yml;
     ".ssh/config".source = ../files/ssh_config;
     ".nginx/config".source = ../files/nginx.config;
+    ".config/helix/config.toml".source = ../files/helix/config.toml;
+    ".config/helix/languages.toml".source = ../files/helix/languages.toml;
     ".nginx/m1.gables.com.crt".source = private.m1-gables-com-crt;
     ".nginx/m1.gables.com.key".source = private.m1-gables-com-key;
     ".config/nixpkgs/config.nix".text = ''

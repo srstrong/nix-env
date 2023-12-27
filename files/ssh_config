@@ -34,6 +34,15 @@ Host jenkins
   Port 7894
   ForwardAgent yes
 
+Host dolby
+  HostName i-0404fbd072487c3a5-id3as.mapi.dolby.link
+  User ec2-user
+  IdentityFile ~/.ssh/dolby.pem
+
+Host gandl
+  HostName 10.11.40.79
+  User steve.strong
+
 #Host i-* mi-*
 #    User ssm-user
 #    ProxyCommand sh -c "aws ssm start-session --profile 302824998957_development --region $REGION --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
