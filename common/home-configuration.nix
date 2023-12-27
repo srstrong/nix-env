@@ -30,7 +30,7 @@ in
     diff-so-fancy
     duf
     fd
-    (ffmpeg-full.override {game-music-emu = null;})
+    (ffmpeg-full.override {withGme = false;})
     fx
     fzf
     git-lfs
@@ -46,6 +46,7 @@ in
     jq
     kitty
     lorri
+    mediainfo
     ncurses6
     nix-prefetch-git
     nmap
