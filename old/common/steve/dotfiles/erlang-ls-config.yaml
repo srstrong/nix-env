@@ -1,4 +1,0 @@
-include_dirs:
-  - "src"
-  - "include"
-  - "_build/default/lib"
