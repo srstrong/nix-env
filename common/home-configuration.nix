@@ -245,7 +245,7 @@ in
 
   home.file = ({
     ".config/kitty/kitty.conf".source = ../files/kitty.conf;
-    ".alacritty.yml".source = ../files/alacritty.yml;
+    ".alacritty.toml".source = ../files/alacritty.toml;
     ".ssh/config".source = ../files/ssh_config;
     ".nginx/config".source = ../files/nginx.config;
     ".config/helix/config.toml".source = ../files/helix/config.toml;
