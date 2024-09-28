@@ -59,7 +59,8 @@ in
     up
     websocat
     wget
-    youtube-dl
+    yt-dlp
+    zellij
   ];
 
   home.sessionVariables = {
@@ -113,7 +114,7 @@ in
   programs.bash = {
     enable = true;
     initExtra = ''
-  eval "$(direnv hook bash)"
+  # eval "$(direnv hook bash)"
   '';
   };
 
@@ -135,7 +136,7 @@ in
 
   programs.zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    # autosuggestions.enable = true;
     enableCompletion = true;
     defaultKeymap = "emacs";
     sessionVariables = {
@@ -205,7 +206,9 @@ in
       fi
       }
 
-  eval "$(direnv hook zsh)"
+  # eval "$(direnv hook zsh)"
+  export NIXPKGS_ALLOW_INSECURE=1
+  export NIXPKGS_ALLOW_UNFREE=1
     '';
   };
 

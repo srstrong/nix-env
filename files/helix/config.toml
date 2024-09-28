@@ -17,13 +17,16 @@ render = true
 enable = true
 
 [keys.normal]
-"space" = {"o" = "file_picker_in_current_buffer_directory" }
 "$" = "goto_line_end"
 "^" = "goto_first_nonwhitespace"
 "S-up" = "jump_view_up"
 "S-down" = "jump_view_down"
 "S-left" = "jump_view_left"
 "S-right" = "jump_view_right"
+
+[keys.normal.space]
+"o" = "file_picker_in_current_buffer_directory" 
+"i" = ":toggle lsp.display-inlay-hints"
 
 [keys.insert]
 "C-w" = "no_op"
@@ -33,3 +36,4 @@ enable = true
 n = ":change-current-directory ~/dev/norsk"
 s = ":change-current-directory ~/dev/norsk-studio"
 t = ":run-shell-command cargo test"
+m = ":run-shell-command ~/.local/bin/zellij run -f -n make -- make"

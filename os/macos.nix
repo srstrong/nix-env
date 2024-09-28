@@ -55,11 +55,11 @@ in
   '';
 
   homebrew.taps = [
-    "homebrew/core"
-    "homebrew/cask"
-    "homebrew/cask-drivers"
+    # "homebrew/core"
+    # "homebrew/cask"
+    # "homebrew/cask-drivers"
     "ktr0731/evans"
-    "kak-lsp/kak-lsp"
+    "kak-lsp/kakoune-lsp"
   ];
 
   homebrew.casks = [
@@ -68,6 +68,7 @@ in
     # "spotify"
     # "yubico-yubikey-manager"
     # "yubico-yubikey-personalization-gui"
+    "1password-cli"
   ];
 
   homebrew.brews = [

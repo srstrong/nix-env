@@ -11,7 +11,7 @@ in
   ];
 
   # Auto upgrade nix package and the daemon service.
-  nix.package = pkgs.nixUnstable;
+  nix.package = pkgs.nixVersions.git;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
@@ -31,8 +31,7 @@ in
   environment.shells = [ pkgs.zsh ];
   environment.variables = { GH_TOKEN = private.gh_token; };
 
-  fonts.fontDir.enable = true;
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     emacs-all-the-icons-fonts
     fira-code
     font-awesome

@@ -39,8 +39,20 @@ Host dolby
   User ec2-user
   IdentityFile ~/.ssh/dolby.pem
 
-Host gandl
+Host gandl-decklink
   HostName 10.11.40.79
+  User steve.strong
+
+Host gandl-deltacast
+  HostName 89.1.36.94
+  User steve.strong
+
+Host gandl-avpu01
+  HostName 10.11.40.94
+  User steve.strong
+
+Host gandl-avpu02
+  HostName 89.1.36.118
   User steve.strong
 
 #Host i-* mi-*
