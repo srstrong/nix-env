@@ -50,6 +50,7 @@ in
     ncurses6
     nix-prefetch-git
     nmap
+    nodejs
     nginx
     python3
     ripgrep
@@ -106,10 +107,10 @@ in
     };
   };
 
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
+  # programs.direnv = {
+  #   enable = true;
+  #   nix-direnv.enable = true;
+  # };
 
   programs.bash = {
     enable = true;

@@ -3,8 +3,6 @@ let
 in
 {
   nix.settings.trusted-users = [ "root" "steve" ];
-  services.nix-daemon.enable = true;
-  nix.configureBuildUsers = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
@@ -44,8 +42,8 @@ in
   };
 
   homebrew.enable = true;
-  homebrew.onActivation.autoUpdate = true;
-  homebrew.onActivation.upgrade = true;
+  # homebrew.onActivation.autoUpdate = true;
+  # homebrew.onActivation.upgrade = true;
   homebrew.onActivation.cleanup = "zap";
   homebrew.global.brewfile = true;
   homebrew.global.lockfiles = true;
@@ -74,7 +72,14 @@ in
   homebrew.brews = [
     "evans"
     "kakoune"
-    "kak-lsp/kak-lsp/kak-lsp"
+    "kak-lsp/kakoune-lsp/kakoune-lsp"
+    "virt-manager"
+    "telnet"
+    "c-kermit"
+    "derailed/k9s/k9s"
+    "mosh"
+    "freerdp"
+    "xterm"
   ];
 
   homebrew.masApps = {

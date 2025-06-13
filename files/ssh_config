@@ -59,5 +59,10 @@ Host gandl-avpu02
 #    User ssm-user
 #    ProxyCommand sh -c "aws ssm start-session --profile 302824998957_development --region $REGION --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
 
+Host *
+    ForwardX11 yes
+    ForwardX11Trusted yes
+
 IdentityFile ~/.ssh/id_rsa
 IdentityFile ~/.ssh/id_ed25519
+
