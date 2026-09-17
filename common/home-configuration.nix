@@ -39,7 +39,6 @@ in
     gnupg
     gnused
     htop
-    helix
     iftop
     influxdb
     ipcalc
@@ -61,7 +60,6 @@ in
     websocat
     wget
     yt-dlp
-    zellij
   ];
 
   home.sessionVariables = {
@@ -141,6 +139,7 @@ in
     enableCompletion = true;
     defaultKeymap = "emacs";
     sessionVariables = {
+      ZSH_DISABLE_COMPFIX = "true";
       RPROMPT = "";
       FZF_DEFAULT_COMMAND = "fd --type f";
     };
@@ -151,6 +150,18 @@ in
     };
 
     oh-my-zsh.enable = true;
+
+    # Login-shell setup (was a hand-maintained ~/.zprofile).
+    profileExtra = ''
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  # brew shellenv exports FPATH, which leaks a /nix/store path (from zsh-z)
+  # into child shells and makes nix-darwin's early compinit complain about
+  # insecure directories. fpath is rebuilt by startup files anyway.
+  typeset +x FPATH
+
+  # Added by OrbStack: command-line tools and integration
+  source ~/.orbstack/shell/init.zsh 2>/dev/null || :
+    '';
 
     plugins = [
       {
@@ -210,6 +221,9 @@ in
   # eval "$(direnv hook zsh)"
   export NIXPKGS_ALLOW_INSECURE=1
   export NIXPKGS_ALLOW_UNFREE=1
+  export PATH=$PATH:~/.local/bin
+  # Never leak fpath to child processes (see profileExtra).
+  typeset +x FPATH
     '';
   };
 
@@ -251,6 +265,7 @@ in
     ".nginx/config".source = ../files/nginx.config;
     ".config/helix/config.toml".source = ../files/helix/config.toml;
     ".config/helix/languages.toml".source = ../files/helix/languages.toml;
+    ".config/alacritty/themes/gruvbox_dark.toml".source = ../files/alacritty/themes/gruvbox_dark.toml;
     ".nginx/m1.gables.com.crt".source = private.m1-gables-com-crt;
     ".nginx/m1.gables.com.key".source = private.m1-gables-com-key;
     ".config/nixpkgs/config.nix".text = ''

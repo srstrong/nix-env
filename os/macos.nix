@@ -4,6 +4,19 @@ in
 {
   nix.settings.trusted-users = [ "root" "steve" ];
 
+  # Norsk binary cache — previously appended directly to /etc/nix/nix.conf by
+  # scripts/nix/install-cache.sh; the markers are kept so that script treats it
+  # as already installed.
+  nix.extraOptions = ''
+    # >>> norsk nix cache (managed by scripts/nix/install-cache.sh) >>>
+    extra-substituters = s3://norsk-binary-cache?region=eu-west-1
+    extra-trusted-public-keys = norsk-cache-1:KwyoUy3m88th8dXuHPbH1Q8Sa8n0ntZBGGcBZB70dSQ=
+    # Silences the redundant flake-config accept prompt; the two lines above are
+    # what actually enable the cache.
+    accept-flake-config = true
+    # <<< norsk nix cache <<<
+  '';
+
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
@@ -48,16 +61,15 @@ in
   homebrew.global.brewfile = true;
   homebrew.global.lockfiles = true;
   homebrew.brewPrefix = "/opt/homebrew/bin"; # M1 - parameterise
-  homebrew.extraConfig = ''
-    cask "firefox", args: { language: "en-GB" }
-  '';
+  # homebrew.extraConfig = ''
+  #   cask "firefox", args: { language: "en-GB" }
+  # '';
 
   homebrew.taps = [
     # "homebrew/core"
     # "homebrew/cask"
     # "homebrew/cask-drivers"
     "ktr0731/evans"
-    "kak-lsp/kakoune-lsp"
   ];
 
   homebrew.casks = [
@@ -67,12 +79,14 @@ in
     # "yubico-yubikey-manager"
     # "yubico-yubikey-personalization-gui"
     "1password-cli"
+    "rancher"
+    "db-browser-for-sqlite"
+    "temurin"
   ];
 
   homebrew.brews = [
+    "gh"
     "evans"
-    "kakoune"
-    "kak-lsp/kakoune-lsp/kakoune-lsp"
     "virt-manager"
     "telnet"
     "c-kermit"
@@ -80,6 +94,11 @@ in
     "mosh"
     "freerdp"
     "xterm"
+    "pipx"
+    "imagemagick"
+    "git-filter-repo"
+    "kopia"
+    "restic"
   ];
 
   homebrew.masApps = {
